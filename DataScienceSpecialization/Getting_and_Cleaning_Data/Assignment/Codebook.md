@@ -1,7 +1,7 @@
 ## Cockbook
 
 ### Preperation
-Load library for process the dataframes and character strings.
+Load library "tidyverse" for processing the dataframes and character strings.
 
 ### Step 1. Read Data and Merge them
 1. Read train and test data files
