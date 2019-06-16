@@ -1,44 +1,30 @@
-Data set 1
+## Cockbook
 
-The features selected for this database come from the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ. These time domain signals (prefix 't' to denote time) were captured at a constant rate of 50 Hz. Then they were filtered using a median filter and a 3rd order low pass Butterworth filter with a corner frequency of 20 Hz to remove noise. Similarly, the acceleration signal was then separated into body and gravity acceleration signals (tBodyAcc-XYZ and tGravityAcc-XYZ) using another low pass Butterworth filter with a corner frequency of 0.3 Hz.
+### Preperation
+Load library for process the dataframes and character strings.
 
-Subsequently, the body linear acceleration and angular velocity were derived in time to obtain Jerk signals (tBodyAccJerk-XYZ and tBodyGyroJerk-XYZ). Also the magnitude of these three-dimensional signals were calculated using the Euclidean norm (tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMag).
+### Step 1. Read Data and Merge them
+1. Read train and test data files
+2. Merge them to preprocess in later at once
+3. Name "ds1" to the marged data
 
-Finally a Fast Fourier Transform (FFT) was applied to some of these signals producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, fBodyGyroJerkMag. (Note the 'f' to indicate frequency domain signals).
+### Step 2. Extract mean and std
+1. Read features file and set to vector
+2. Exstact the strings contains "mean" and "std" from the vector and set to the vector named "extract"
+3. Exstact the cloumns form dataframe "ds1" by the vecter "extract" added TRUE as last element (that is for Activity labels)
 
-These signals were used to estimate variables of the feature vector for each pattern:
-'-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
+### Step 3. Name the activities
+1. Read activity_labels file and create the dataframe to relate activity labels and names
+2. Join dataframe "ds1" and activity by label to map the activity labels to names
+3. Drop the activity label column
 
-tBodyAcc-XYZ
-tGravityAcc-XYZ
-tBodyAccJerk-XYZ
-tBodyGyro-XYZ
-tBodyGyroJerk-XYZ
-tBodyAccMag
-tGravityAccMag
-tBodyAccJerkMag
-tBodyGyroMag
-tBodyGyroJerkMag
-fBodyAcc-XYZ
-fBodyAccJerk-XYZ
-fBodyGyro-XYZ
-fBodyAccMag
-fBodyAccJerkMag
-fBodyGyroMag
-fBodyGyroJerkMag
+### Step 4.  Labels the data set
+1. Set to column's names of the dataframe ds1
+2. Write the dataframe "ds1" to DataSet1.csv
 
-The set of variables that were estimated from these signals are:
-
-mean(): Mean value
-std(): Standard deviation
-Data set2
-
-subid
-Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30.
-activity
-WALKING
-WALKING_UPSTAIRS
-WALKING_DOWNSTAIRS
-SITTING
-STANDING
-LAYING
+### Step 5.  Summarize by Subject and Activity
+1. Read subject files
+2. Add subject column maned subid to "ds2"
+2. Group the dataframe "ds2" by subject and activity
+3. Get means of each columns
+4. Write the dataframe "ds2" to DataSet2.csv
