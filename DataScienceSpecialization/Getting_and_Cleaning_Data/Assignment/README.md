@@ -4,8 +4,8 @@
 
 1. README.md: this file
 2. run_analysis.R: R script file for Assginment
-3. Codebook.md: Descriptions when processing the DataSets
-5. DataSet.csv: The outcome DataSet for Setp 5 in Assginment
+3. Codebook.md: Descriptions processing the Data
+4. DataSet.csv: The outcome DataSet, that is extracted mean and standard deviation and the average of each variable for each activity and each subject
 
 
 ## Assignment;
