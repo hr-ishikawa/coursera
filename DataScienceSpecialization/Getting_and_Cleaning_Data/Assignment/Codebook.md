@@ -14,7 +14,7 @@ The data is collected from the accelerometers from the smartphone and gyroscope 
 - 'test/y_test.txt': Test labels.
 - 'test/subject_test.txt': Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. 
 
-The label of activity
+The labels of activity
 1. WALKING
 2. WALKING_UPSTAIRS
 3. WALKING_DOWNSTAIRS
