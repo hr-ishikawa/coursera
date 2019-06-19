@@ -31,18 +31,18 @@ The labels of activity
 2. Merge them to process in later at once
 3. Name "ds1" to the marged data
 
-### Step 2. Extract mean and std
+### Step 2. Extract mean and standard deviation from the columns of measurement
 1. Read features file (features.txt) and set to vector
 2. Extract the strings contains "mean" and "std" from the vector and set to the vector named "extract"
 3. Extract the columns form dataframe "ds1" by the vecter "extract" added TRUE as last element (that is for Activity labels)
 
-### Step 3. Name the activities
+### Step 3. Set the labels to the activities
 1. Read activity_labels file (activity_labels.txt) and create the dataframe to relate activity labels and names
 2. Join dataframe "ds1" and activity by label to map the activity labels to names
 3. Drop the activity label column
 
-### Step 4.  Labels the data set
-1. Set column's names to the dataframe ds1
+### Step 4. Set features to the columns of data set
+1. Set features to columns' name of the dataframe ds1
 2. Write the dataframe "ds1" to DataSet1.csv
 
 ### Step 5.  Summarize by mean for Subject and Activity
