@@ -9,8 +9,10 @@ The data is collected from the accelerometers from the smartphone and gyroscope 
 - 'activity_labels.txt': Links the class labels with their activity name.
 - 'train/X_train.txt': Training set.
 - 'train/y_train.txt': Training labels.
+- 'train/subject_train.txt': Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. 
 - 'test/X_test.txt': Test set.
 - 'test/y_test.txt': Test labels.
+- 'test/subject_test.txt': Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. 
 
 The label of activity
 1. WALKING
@@ -43,7 +45,7 @@ The label of activity
 1. Set column's names to the dataframe ds1
 2. Write the dataframe "ds1" to DataSet1.csv
 
-### Step 5.  Summarize by Subject and Activity
+### Step 5.  Summarize by mean for Subject and Activity
 1. Read subject files
 - subject_train.txt
 - subject_test.txt
