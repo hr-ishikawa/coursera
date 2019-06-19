@@ -5,8 +5,7 @@
 1. README.md: this file
 2. run_analysis.R: R script file for Assginment
 3. Codebook.md: Descriptions when processing the DataSets
-4. DataSet1.csv: The outcome dataSet for Setp 4 in Assginment
-5. DataSet2.csv: The outcome DataSet for Setp 5 in Assginment
+5. DataSet.csv: The outcome DataSet for Setp 5 in Assginment
 
 
 ## Assignment;
