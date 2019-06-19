@@ -37,8 +37,6 @@ ds1 <- ds1 %>% inner_join(act, by='actid') %>% select(-actid)
 #
 colnames(ds1) <- c(features[extract], colnames(ds1)[ncol(ds1)])
 
-write.csv(ds1, 'DataSet1.csv', quote=T, row.names=F)
-
 #============================
 # Step 5.  Summarize by Subject and Activity
 
@@ -49,4 +47,4 @@ ds2 <- ds1 %>% bind_cols(bind_rows(strain, stest))
 
 ds2 <- ds2 %>% group_by(subid,activity) %>% summarize_all(funs(mean))
 
-write.csv(ds2, 'DataSet2.csv', quote=T, row.names=F)
+write.csv(ds2, 'DataSet.csv', quote=T, row.names=F)
