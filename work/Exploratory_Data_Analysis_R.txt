@@ -6,3 +6,13 @@ library(tidyverse)
 NEI <- readRDS("summarySCC_PM25.rds")
 SCC <- readRDS("Source_Classification_Code.rds")
 
+## Q1
+
+NEI_Yearly_Emiss_df <- NEI %>% group_by(year) %>% summarize(Total_Emissions=sum(Emissions))
+NEI_Yearly_Emiss <- NEI_Yearly_Emiss_df$Total_Emissions
+names(NEI_Yearly_Emiss) <- NEI_Yearly_Emiss_df$year
+
+options(scipen=7)
+par(mar=c(5,7,2,2), mgp=c(3.5,0.5,0))
+barplot(NEI_Yearly_Emiss,xlab='Year',ylab='Total Emissions',yaxt="n")
+axis(2, las=2, cex.axis=0.7)
