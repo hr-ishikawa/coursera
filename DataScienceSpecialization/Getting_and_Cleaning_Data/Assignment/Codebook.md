@@ -68,6 +68,7 @@ The set of variables that were estimated from these signals are:
 17. angle(): Angle between to vectors.
 
 <br/>
+
 ## Data Processing
 
 ### Step 1. Read Data and Merge them
