@@ -1,6 +1,6 @@
 ## Code Book
 
-## Data Source and Variavles
+## Data Source and Variables
 
 The data is collected from the accelerometers from the smartphone and gyroscope under the activity specified below.
 
