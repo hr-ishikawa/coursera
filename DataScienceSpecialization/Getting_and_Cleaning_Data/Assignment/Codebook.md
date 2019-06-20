@@ -1,6 +1,6 @@
 ## Code Book
 
-### Data Source
+## Data Source
 
 The data is collected from the accelerometers from the smartphone and gyroscope under the activity specified below.
 
@@ -14,7 +14,7 @@ The data is collected from the accelerometers from the smartphone and gyroscope 
 - 'test/y_test.txt': Test labels.
 - 'test/subject_test.txt': Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. 
 
-#### Activity (Labeled in activity_labels.txt)
+### Activity (Labeled in activity_labels.txt)
 1. WALKING
 2. WALKING_UPSTAIRS
 3. WALKING_DOWNSTAIRS
@@ -22,7 +22,7 @@ The data is collected from the accelerometers from the smartphone and gyroscope 
 5. STANDING
 6. LAYING
 
-#### Features (Labeled in features.txt and Descrived in features_info.txt)
+### Features (Labeled in features.txt and Descrived in features_info.txt)
 The features come from the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ.
 
 After some processing the signals, the feature vectors were calculated:
@@ -69,9 +69,9 @@ In them, Mean value and Standard deviation will be extracted in the following pr
 16. bandsEnergy(): Energy of a frequency interval within the 64 bins of the FFT of each window.
 17. angle(): Angle between to vectors.
 
-### Data Processing
+## Data Processing
 
-#### Step 1. Read Data and Merge them
+### Step 1. Read Data and Merge them
 1. Read train and test data files
 - X_train.txt
 - X_test.txt
@@ -80,21 +80,21 @@ In them, Mean value and Standard deviation will be extracted in the following pr
 2. Merge them to process in later at once
 3. Name "ds1" to the marged data
 
-#### Step 2. Extract mean and standard deviation from the columns of measurement
+### Step 2. Extract mean and standard deviation from the columns of measurement
 1. Read features file (features.txt) and set to vector
 2. Extract the strings contains "mean" and "std" from the vector and set to the new vector named "extract"
 3. Extract the columns form dataframe "ds1" by the vecter "extract" added TRUE as last element (that is for Activity labels)
 
-#### Step 3. Set the labels to the activities
+### Step 3. Set the labels to the activities
 1. Read activity_labels file (activity_labels.txt) and create the dataframe to relate activity labels and names
 2. Join dataframe "ds1" and activity by label to map the activity labels to names
 3. Drop the activity label column
 
-#### Step 4. Set features to the columns of data set
+### Step 4. Set features to the columns of data set
 1. Set features (the vector named "extract" created above) to columns' name of the dataframe ds1
 2. Write the dataframe "ds1" to DataSet1.csv
 
-#### Step 5.  Summarize by mean for Subject and Activity
+### Step 5.  Summarize by mean for Subject and Activity
 1. Read subject files
 - subject_train.txt
 - subject_test.txt
