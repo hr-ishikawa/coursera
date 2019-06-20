@@ -28,7 +28,7 @@ options(scipen=7)
 par(mar=c(5,7,2,2), mgp=c(2.5,0.5,0))
 barplot(NEI_Yearly_Emiss,xlab='Year',ylab='Total Emissions',yaxt="n")
 axis(2, las=2, cex.axis=0.7)
-title('Baltimore City, Maryland ')
+title('Baltimore City, Maryland')
 
 
 ## Q3
@@ -36,4 +36,4 @@ title('Baltimore City, Maryland ')
 NEI_Yearly_Emiss_df <- NEI %>% filter(fips == "24510") %>% group_by(year,type) %>% summarize(Total_Emissions=sum(Emissions))
 NEI_Yearly_Emiss_df %>% head()
 
-ggplot(NEI_Yearly_Emiss_df,aes(x=year,y=Total_Emissions))+geom_line(aes(color=type))
+ggplot(NEI_Yearly_Emiss_df,aes(x=year,y=Total_Emissions))+geom_line(aes(color=type),size=1)+ggtitle('Baltimore City, Maryland')
