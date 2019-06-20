@@ -47,8 +47,7 @@ After some processing the signals, the feature vectors were calculated:
 17. fBodyGyroJerkMag
 
 The set of variables that were estimated from these signals are:
-
-In them, Mean value and Standard deviation will be extracted in the following process.
+<br/>In them, Mean value and Standard deviation will be extracted in the following process.
 
 1. mean(): Mean value
 2. std(): Standard deviation
@@ -68,6 +67,7 @@ In them, Mean value and Standard deviation will be extracted in the following pr
 16. bandsEnergy(): Energy of a frequency interval within the 64 bins of the FFT of each window.
 17. angle(): Angle between to vectors.
 
+<br/>
 ## Data Processing
 
 ### Step 1. Read Data and Merge them
