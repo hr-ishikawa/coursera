@@ -37,3 +37,8 @@ NEI_Yearly_Emiss_df <- NEI %>% filter(fips == "24510") %>% group_by(year,type) %
 NEI_Yearly_Emiss_df %>% head()
 
 ggplot(NEI_Yearly_Emiss_df,aes(x=year,y=Total_Emissions))+geom_line(aes(color=type),size=1)+ggtitle('Baltimore City, Maryland')
+
+
+## Q4
+
+SCC %>% filter(str_detect(EI.Sector,'Coal')) %>% pull(EI.Sector) %>%  unique() %>% head()
