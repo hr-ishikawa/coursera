@@ -1,6 +1,6 @@
 ## Code Book
 
-## Data Source
+## Data Source and Variavles
 
 The data is collected from the accelerometers from the smartphone and gyroscope under the activity specified below.
 
@@ -26,8 +26,7 @@ The data is collected from the accelerometers from the smartphone and gyroscope 
 The features come from the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ.
 
 After some processing the signals, the feature vectors were calculated:
-
-'-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
+<br/>'-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
 
 1. tBodyAcc-XYZ
 2. tGravityAcc-XYZ
