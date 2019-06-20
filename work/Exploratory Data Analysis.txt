@@ -1,85 +1,85 @@
-NEI�́A���N����ъe�^�C�v��PM�������ɂ��āA�N�Ԃ�ʂ��Ă��̔��������牽�g����PM2.5�����o���ꂽ�����L�^���܂��B
-���̉ۑ�Ɏg�p����f�[�^�́A1999�N�A2002�N�A2005�N�A�����2008�N�̂��̂ł��B
+NEIは、毎年および各タイプのPM発生源について、年間を通じてその発生源から何トンのPM2.5が放出されたかを記録します。
+この課題に使用するデータは、1999年、2002年、2005年、および2008年のものです。
 
-�R���
-���₲�Ƃ�
+審査基準
+質問ごとに
 
-1.�v���b�g�́A�q�˂��Ă��鎿��ɑΏ����Ă���悤�Ɍ����܂����H
-2.��o���ꂽR�R�[�h�͒�o���ꂽ�v���b�g�̍쐬�ɓK�؂ł����H
+1.プロットは、尋ねられている質問に対処しているように見えますか？
+2.提出されたRコードは提出されたプロットの作成に適切ですか？
 
-�f�[�^��\��
-���̉ۑ�̃f�[�^�́A�R�[�X��Web�T�C�g����P���zip�t�@�C���Ƃ��ē���ł��܂��B
+データ非表示
+この課題のデータは、コースのWebサイトから単一のzipファイルとして入手できます。
 
-�s�A�]���̂��߂̃f�[�^
+ピア評価のためのデータ
 https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip[29Mb]
-zip�t�@�C���ɂ�2�̃t�@�C�����܂܂�Ă��܂��B
+zipファイルには2つのファイルが含まれています。
 
-PM2.5�r�o�ʃf�[�^�isummarySCC_PM25.rds�j�F���̃t�@�C���ɂ́A1999�N�A2002�N�A2005�N�A�����2008�N��PM2.5�r�o�ʃf�[�^���ׂĂ��܂�
-�f�[�^�t���[�����܂܂�Ă��܂��B���N�A���̕\�ɂ�PM2.5�̃g�������܂܂�Ă��܂��B�N�Ԃ�ʂ��ē���̎�ނ̔�����������o�����B
-���ꂪ�ŏ��̐��s�ł��B
+PM2.5排出量データ（summarySCC_PM25.rds）：このファイルには、1999年、2002年、2005年、および2008年のPM2.5排出量データすべてを含む
+データフレームが含まれています。毎年、この表にはPM2.5のトン数が含まれています。年間を通じて特定の種類の発生源から放出される。
+これが最初の数行です。
 
--fips�F�č��̌S������5���̐����i�X�g�����O�Ƃ��ĕ\�����j
--SCC�F������Ŏ������\�[�X�̖��O�i�\�[�X�R�[�h���ޕ\���Q�Ɓj
- - ���������F��������������������
- - �r�o�ʁF�g���ŁA�r�o�����PM2.5�̗�
--type�F�\�[�X�̎�ށi�|�C���g�A��|�C���g�A�I�����[�h�A�܂��͔񃍁[�h�j
-�N�F�L�^���ꂽ�r�o�N
+-fips：米国の郡を示す5桁の数字（ストリングとして表される）
+-SCC：数字列で示されるソースの名前（ソースコード分類表を参照）
+ - 汚染物質：汚染物質を示す文字列
+ - 排出量：トンで、排出されるPM2.5の量
+-type：ソースの種類（ポイント、非ポイント、オンロード、または非ロード）
+年：記録された排出年
 
-�\�[�X���ރR�[�h�\�iSource_Classification_Code.rds} Source_Classification_Code.rds�j�F
-���̕\�́AEmissions�e�[�u����SCC�f�B�W�b�g�����񂩂�PM2.5�\�[�X�̎��ۂ̖��O�ւ̃}�b�s���O��񋟂��܂��B
-��񌹂́A����ʓI�Ȃ��̂������̓I�Ȃ��̂܂ŁA�������̈قȂ���@�ŕ��ނ���Ă���A
-���Ȃ��͂��Ȃ����ł��L�p�ł���Ǝv���ǂ�ȃJ�e�S���ł��T�����邱�Ƃ�I�����邱�Ƃ��ł��܂��B
-���Ƃ��΁A�������u10100101�v�́uExt Comb / Electric Gen /�����Y/�����Y�v�Ƃ��Ēm���Ă��܂��B
+ソース分類コード表（Source_Classification_Code.rds} Source_Classification_Code.rds）：
+この表は、EmissionsテーブルのSCCディジット文字列からPM2.5ソースの実際の名前へのマッピングを提供します。
+情報源は、より一般的なものからより具体的なものまで、いくつかの異なる方法で分類されており、
+あなたはあなたが最も有用であると思うどんなカテゴリでも探求することを選択することができます。
+たとえば、供給元「10100101」は「Ext Comb / Electric Gen /無煙炭/微粉炭」として知られています。
 
-R��readRDS�i�j�֐����g�p���āA2�̃t�@�C���̂��ꂼ���ǂݎ�邱�Ƃ��ł��܂��B
-�Ⴆ�΁A�e�t�@�C���̓ǂݎ��́A�ȉ��̃R�[�h�ōs�����Ƃ��ł��܂��B
+RのreadRDS（）関数を使用して、2つのファイルのそれぞれを読み取ることができます。
+例えば、各ファイルの読み取りは、以下のコードで行うことができます。
 
-##���̍ŏ��̍s�͐��b������ł��傤�B�䖝���āI
-NEI < -  readRDS�i "summarySCC_PM25.rds"�j
-SCC < -  readRDS�i "Source_Classification_Code.rds"�j
+##この最初の行は数秒かかるでしょう。我慢して！
+NEI < -  readRDS（ "summarySCC_PM25.rds"）
+SCC < -  readRDS（ "Source_Classification_Code.rds"）
 
-�����̊e�t�@�C�������݂̍�ƃf�B���N�g���ɂ������idir�i�j���Ăяo���Ċm�F���A
-�����̃t�@�C�������X�g�Ɋ܂܂�Ă��邩�ǂ������m�F���Ă��������j�B
+これらの各ファイルが現在の作業ディレクトリにある限り（dir（）を呼び出して確認し、
+それらのファイルがリストに含まれているかどうかを確認してください）。
 
-���蓖��
+#### 割り当て
 
-���̉ۑ�̑S�̓I�ȖڕW�́ANational Emissions Inventory�f�[�^�x�[�X�𒲂ׂāA
-1999�N����2008�N�܂ł�10�N�Ԃɂ킽��č��ɂ���������q�󕨎������ɂ��Ă̋L�q���m�F���邱�Ƃł��B
-���Ȃ��̕��͂��T�|�[�g�������C�ӂ�R�p�b�P�[�W���g�����Ƃ��ł��܂��B
+この課題の全体的な目標は、National Emissions Inventoryデータベースを調べて、
+1999年から2008年までの10年間にわたる米国における微粒子状物質汚染についての記述を確認することです。
+あなたの分析をサポートしたい任意のRパッケージを使うことができます。
 
-����
+#### 質問
 
-�T���I���͂ł́A�ȉ��̎���ƃ^�X�N�ɑΏ�����K�v������܂��B
-����/�ۑ育�ƂɁA�P��̃v���b�g���쐬����K�v������܂��B
-���Ɏw��̂Ȃ�����A���Ȃ��͂��Ȃ��̃v���b�g����邽�߂�R�̒���
-�ǂ�ȃv���b�g�V�X�e�����g�����Ƃ��ł��܂��B
+探索的分析では、以下の質問とタスクに対処する必要があります。
+質問/課題ごとに、単一のプロットを作成する必要があります。
+特に指定のない限り、あなたはあなたのプロットを作るためにRの中の
+どんなプロットシステムを使うこともできます。
 
-1.�č��ł́APM2.5����̑��r�o�ʂ�1999�N����2008�N�ɂ����Č������܂������B
-�x�[�X�v���b�g�V�X�e�����g�p���āA1999�N�A2002�N�A2005�N�A
-�����2008�N�̊e�N�ɂ��āA�S����������̑�PM2.5�r�o�ʂ������v���b�g���쐬���܂��B
+1.米国では、PM2.5からの総排出量が1999年から2008年にかけて減少しましたか。
+ベースプロットシステムを使用して、1999年、2002年、2005年、
+および2008年の各年について、全発生源からの総PM2.5排出量を示すプロットを作成します。
 
-2. 1999�N����2008�N�ɂ����āA�����[�����h�B�{���`���A�s��PM2.5����̑��r�o�ʂ��������܂������ifips == "24510"�j�B
-���̎���ɓ�����v���b�g���쐬���邽�߂Ƀx�[�X�v���b�g�V�X�e�����g�p���Ă��������B
+2. 1999年から2008年にかけて、メリーランド州ボルチモア市でPM2.5からの総排出量が減少しましたか（fips == "24510"）。
+この質問に答えるプロットを作成するためにベースプロットシステムを使用してください。
 
-3.�ϐ��i�^�C�v�A�|�C���g�A�m���|�C���g�A�I�����[�h�A�m�����[�h�j�Ŏ������4��ނ̔r�o���̂����A
-1999�N����2008�N�ɂ����ă{���`���A�s�Ŕr�o�ʂ����������̂͂ǂ�ł����B 
-1999�N����2008�N�ɂ����Ĕr�o�ʂ����������̂͂ǂ�ł����B
-�v���b�g�����̎���ɓ�����悤�ɂ���ɂ́Aggplot2�v���b�g�V�X�e�����g�p���Ă��������B
+3.変数（タイプ、ポイント、ノンポイント、オンロード、ノンロード）で示される4種類の排出源のうち、
+1999年から2008年にかけてボルチモア市で排出量が減少したのはどれですか。 
+1999年から2008年にかけて排出量が増加したのはどれですか。
+プロットがこの質問に答えるようにするには、ggplot2プロットシステムを使用してください。
 
-4.�č��S�̂ŁA1999�N����2008�N�ɂ����āA�ΒY�R�Ċ֘A�̔r�o������̔r�o�ʂ͂ǂ̂悤�ɕω����܂������B
+4.米国全体で、1999年から2008年にかけて、石炭燃焼関連の排出源からの排出量はどのように変化しましたか。
 
-5.�{���`���A�s�ł�1999�N����2008�N�ɂ����Ď����Ԃ���̔r�o�ʂ͂ǂ̂悤�ɕω����܂������B
+5.ボルチモア市では1999年から2008年にかけて自動車からの排出量はどのように変化しましたか。
 
-6.�{���`���A�s�̎����Ԃ̔���������̔r�o�ʂ��J���t�H���j�A�B���T���[���X�S�̎����Ԃ̔���������̔r�o�ʂƔ�r����ifips == "06037"�j�B�ǂ̓s�s�Ŏ����Ԕr�o�ʂ̌o�N�ω����傫���Ȃ��Ă��܂����H
+6.ボルチモア市の自動車の発生源からの排出量をカリフォルニア州ロサンゼルス郡の自動車の発生源からの排出量と比較する（fips == "06037"）。どの都市で自動車排出量の経年変化が大きくなっていますか？
 
-�v���b�g�̍쐬�ƒ�o
+プロットの作成と提出
 
-�v���b�g���Ƃ�
+プロットごとに
 
- - �v���b�g���쐬����PNG�t�@�C���ɕۑ����܂��B
- - �Ή�����v���b�g���\������ʂ�R�R�[�h�t�@�C���iplot1.R�Aplot2.R�Ȃǁj���쐬���܂��B���Ȃ킿�Aplot1.R�̃R�[�h��plot1.png�v���b�g���\�����܂��B�v���b�g�����S�ɍČ��ł���悤�ɁA�R�[�h�t�@�C���Ƀf�[�^��ǂݎ�邽�߂̃R�[�h���܂߂�K�v������܂��B PNG�t�@�C�����쐬����R�[�h���܂߂�K�v������܂��B�P��̃v���b�g�̃R�[�h�݂̂��܂߂�i�܂�Aplot1.R��plot1.png�𐶐����邽�߂̃R�[�h�������܂߂�ׂ��ł��j
- - �ۑ��o�y�[�W��PNG�t�@�C�����A�b�v���[�h����
- - �s�A�]���̓K�؂Ȏ��_�ŁA�Ή�����R�t�@�C������e�L�X�g�{�b�N�X��R�R�[�h���R�s�[���ē\��t���܂��B
+ - プロットを作成してPNGファイルに保存します。
+ - 対応するプロットを構成する別のRコードファイル（plot1.R、plot2.Rなど）を作成します。すなわち、plot1.Rのコードはplot1.pngプロットを構成します。プロットを完全に再現できるように、コードファイルにデータを読み取るためのコードを含める必要があります。 PNGファイルを作成するコードも含める必要があります。単一のプロットのコードのみを含める（つまり、plot1.Rはplot1.pngを生成するためのコードだけを含めるべきです）
+ - 課題提出ページにPNGファイルをアップロードする
+ - ピア評価の適切な時点で、対応するRファイルからテキストボックスにRコードをコピーして貼り付けます。
 
 
 ==============================================================
@@ -91,7 +91,7 @@ For each question
 1. Does the plot appear to address the question being asked?
 2. Is the submitted R code appropriate for construction of the submitted plot?
 
-Data��\�� 
+Data非表示 
 The data for this assignment are available from the course web site as a single zip file:
 
 Data for Peer Assessment 
@@ -107,7 +107,7 @@ PM2.5 Emissions Data (summarySCC_PM25.rds): This file contains a data frame with
 -type: The type of source (point, non-point, on-road, or non-road)
 -year: The year of emissions recorded
 
-Source Classification Code Table (Source_Classification_Code.rds}Source_Classification_Code.rds): This table provides a mapping from the SCC digit strings in the Emissions table to the actual name of the PM2.5 source. The sources are categorized in a few different ways from more general to more specific and you may choose to explore whatever categories you think are most useful. For example, source �g10100101�h is known as �gExt Comb /Electric Gen /Anthracite Coal /Pulverized Coal�h.
+Source Classification Code Table (Source_Classification_Code.rds}Source_Classification_Code.rds): This table provides a mapping from the SCC digit strings in the Emissions table to the actual name of the PM2.5 source. The sources are categorized in a few different ways from more general to more specific and you may choose to explore whatever categories you think are most useful. For example, source “10100101” is known as “Ext Comb /Electric Gen /Anthracite Coal /Pulverized Coal”.
 
 You can read each of the two files using the readRDS() function in R. For example, reading in each file can be done with the following code:
 
