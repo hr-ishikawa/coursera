@@ -74,7 +74,7 @@ SCC_Vehi_v <- SCC %>% filter(str_detect(EI.Sector,'Vehicle')) %>% pull(SCC)
 NEI_Bal_Vehi_df <- NEI %>% filter(SCC %in% SCC_Vehi_v & fips=='24510') %>%
     group_by(year) %>% summarize(Bal_Vehi_Emissions=sum(Emissions)) %>% mutate(year=factor(year))
 
-png("plot4.png", width = 480, height = 480)
+png("plot5.png", width = 480, height = 480)
 ggplot(NEI_Bal_Vehi_df,aes(x=year,y=Bal_Vehi_Emissions))+geom_bar(stat='identity',width=0.7)+
     ggtitle('Emissions from motor vehicle sources in Baltimore City')
 dev.off()
@@ -85,11 +85,12 @@ NEI <- readRDS("summarySCC_PM25.rds")
 SCC <- readRDS("Source_Classification_Code.rds")
 
 SCC_Vehi_v <- SCC %>% filter(str_detect(EI.Sector,'Vehicle')) %>% pull(SCC)
-NEI_Bal_Vehi_df <- NEI %>% filter(SCC %in% SCC_Vehi_v & fips=='24510') %>%
-    group_by(year) %>% summarize(Bal_Vehi_Emissions=sum(Emissions)) %>% mutate(year=factor(year))
+NEI_Vehi_df <- NEI %>% filter(SCC %in% SCC_Vehi_v & str_detect(fips,'24510|06037')) %>%
+    group_by(fips,year) %>% summarize(Vehi_Emissions=sum(Emissions)) %>% ungroup() %>% 
+    mutate(fips=recode(fips,'24510'='Baltimore','06037'='Los Angeles'), Vehi_Emissions=as.integer(Vehi_Emissions))
 
-png("plot4.png", width = 480, height = 480)
-ggplot(NEI_Bal_Vehi_df,aes(x=year,y=Bal_Vehi_Emissions))+geom_bar(stat='identity',width=0.7)+
-    ggtitle('Emissions from motor vehicle sources in Baltimore City')
+png("plot6.png", width = 480, height = 480)
+ggplot(NEI_Vehi_df,aes(x=year,y=Vehi_Emissions))+geom_line(aes(color=fips),size=1)+
+    ggtitle('Emissions from Vehicles in Baltimore with Los Angeles')
 dev.off()
 
