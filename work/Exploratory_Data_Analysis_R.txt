@@ -91,6 +91,6 @@ NEI_Vehi_df <- NEI %>% filter(SCC %in% SCC_Vehi_v & str_detect(fips,'24510|06037
 
 png("plot6.png", width = 480, height = 480)
 ggplot(NEI_Vehi_df,aes(x=year,y=Vehi_Emissions))+geom_line(aes(color=fips),size=1)+
-    ggtitle('Emissions from Vehicles in Baltimore with Los Angeles')
+    ggtitle('Emissions from Vehicles in Baltimore and Los Angeles')
 dev.off()
 
