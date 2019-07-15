@@ -23,8 +23,7 @@ expected value, expectation
 
 X の期待値: E[X] = ∑ xi*P(X=xi)    
 
-### 分散
-variance
+### 分散 variance
 
 Var = E(X^2)-(E(X))^2
 
@@ -65,8 +64,9 @@ https://ja.wikipedia.org/wiki/%E4%BA%8C%E9%A0%85%E5%88%86%E5%B8%83
 結果が成功か失敗のいずれかである試行（ベルヌーイ試行）を独立に n 回行ったときの成功回数を確率変数とする離散確率分布
 - 確率質量関数: P[X=k] = choose(n,k) * p^k * (1-p)^(n-k)  for k=0,1,2,...,n <br/>
 choose(n,k) = nCk = n!/(k!*(n-k)!), n=試行回数、x=成功回数 <br/>
-試行回数がnであるときに、x回成功する確率
+試行回数がnであるときに、x回成功する確率0
 - 累積分布(cdf)
+
 pbinom(q, size=n, prob=p, lower.tail=F), <br/>
 q=確率点(quantile|qtukey), lower.tail=F 上側確率(確率変数が確率(分位)点より大きい確率lower.tail=F)
 pbinom(q=2,size=5,prob=0.8,lower.tail=F)
@@ -97,8 +97,8 @@ binom.test(60,100)$conf.int  ## 100 の内, 60が成功すると予測する場�
 #### ポアソン, Poisson
 
 - 累積分布(cdf)
-ppos(q, mean, lower.tail=T, log.p=F), <br/>
-ppos(3,2.5*4):単位時間あたり2.5のポアソンであり、4単位時間に3以下(最大3)が到着する確率
+ppois(q, mean, lower.tail=T, log.p=F), <br/>
+ppois(3,2.5*4):単位時間あたり2.5のポアソンであり、4単位時間に3以下(最大3)が到着する確率
 
 原子力ポンプが94.32日のうち5回故障したとし、1日あたりの故障率に対して95％の信頼区間が欲しいとします。
 x=回数, t=期間
