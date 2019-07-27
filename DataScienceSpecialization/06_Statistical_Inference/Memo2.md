@@ -94,9 +94,77 @@ Gr2: n_y=21, mn_y=127.44, S_y=18.23
 
 
 
-両側/片側検定
+### 帰無仮説 NULL hypothesis (H_0)
+### 対立仮説 alternative hypotheses (H_a)
+
+Sample;
+    母集団RDI:  mu=30/h, 分散varianse=1
+    標本RDI:    X'=32/h, n=100, sd=10/h
+  Test 
+    H_0(mu=30)
+    H_a: mu>30
+    
+    H_a is TRUE and we accept it
+    H_0 is TRUE and we reject it
+
+    Type I  error REJECTS a TRUE  null hypothesis H_0
+    Type II error ACCEPTS a FALSE null hypothesis H_0
 
 
-帰無仮説
+### 第一種過誤（α過誤、偽陽性）
+帰無仮説が実際には真であるのに棄却してしまう過誤である。つまり、偽がヒットすることによるエラーである。
+### 第二種過誤（β過誤、偽陰性）
+対立仮説が実際には真であるのに帰無仮説を採用してしまう過誤である。つまり、真が抜け落ちることによるエラーである。 対立仮説が正しい時に対立仮説を採択しない誤りのこと。 
+
+
+standard error  
+SE = sd / sqrt(n) = 10/sqrt(100)
+
+mu + qnorm(0.95) * SE = 31.645 < 3.2
+ => 95%の外側(片側5%)に含まれる
+ => H_0が棄却される？
+
+Z値
+(X'-mu) / SE = 2 > 1.645  ## 95%の値を超えている
+
+The general rule for rejection is if sqrt(n) * ( X' - mu) / s > Z_{1-alpha}.
+
+標本RDI:    X'=32/h, n=16, sd=10/h
+検定統計量(the value of the test statistic)
+  (X'-mu)/(s/sqrt(n)) = (32-30)/(10/sqrt(16)) = 0.8
+  qt(0.95,15) = 1.75 # 自由度15の95%分位値
+  0.8 < 1.75  ## 95%以下なので棄却できない
+
+father-son hight
+> head(fs)
+   fheight  sheight
+1 65.04851 59.77827
+2 63.25094 63.21404
+
+> dim(fs)
+[1] 1078    2
+
+t.test(fs$sheight-fs$fheight)             # 差の平均値が0か
+t.test(fs$sheight,fs$fheight,paired=TRUE) # 平均値の差が0か
+
+        Paired t-test
+
+data:  fs$sheight and fs$fheight
+t = 11.789, df = 1077, p-value < 2.2e-16
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 0.8310296 1.1629160               ### <= 信頼区間
+sample estimates:
+mean of the differences 
+              0.9969728 
+
+t統計量 = 11.789
+H_0: 差の真の平均が0であった
+
+t統計量 * sd(g1-g2)/sqrt(n)
+11.7885 * sd(fs$sheight-fs$fheight)/sqrt(1078) = 0.9969686
+
+
+
 
 
