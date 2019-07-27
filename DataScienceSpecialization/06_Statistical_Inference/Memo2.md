@@ -1,3 +1,5 @@
+## (例) 2つのグループ間の平均に有意差があるかどうか
+平均の差を表わす統計量は「t値」
 
 ### t分布 (t distribution)
 自由度(degrees of freedom (df))
@@ -7,7 +9,7 @@ qt(0.975, df=2) # 自由度2
 ### t信頼区間 (t confidence intervals)
 
 ### 信頼区間(confidence interval)
-95%の信頼区間 = 標本集団の95% が含まれる値の範囲[quantile(0.025,0.975)] = 平均 ± 1.96σ
+信頼係数=95%の信頼区間 = 標本集団の95% が含まれる値の範囲[quantile(0.025,0.975)] = 平均 ± 1.96σ
 
 平均値 +/- 95%分位値 * 標準誤差(?)
 
@@ -16,6 +18,11 @@ qt(0.975, df=2) # 自由度2
 Est +/- qnorm * std error(Est)
 
 Est +/- t-quantile *std error(Est)
+
+
+### 母平均の「信頼区間」
+標本平均 ± t値 × 標本標準偏差 ÷ √標本の数
+
 
 
 #### Z統計値 (Z statistic)
