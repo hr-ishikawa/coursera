@@ -592,11 +592,15 @@ No, you would fail to reject. The 95% interval would be wider than the 90% inter
 #### Q7
 ```
 pnorm(1.645 * 0.004, mean = 0.01, sd = 0.004, lower.tail = FALSE)  ## [1] 0.8037
+
+power.t.test(n=100, delta=0.01, sd=0.04, type="one.sample", alt="one.sided")$power  ## [1] 0.7989855
 ```
 #### Q8
 Researchers would like to conduct a study of 100 healthy adults to detect a four year mean brain volume loss of .01mm^3. Assume that the standard deviation of four year volume loss in this population is .04mm^3. About what would be the power of the study for a 5% one sided test versus a null hypothesis of no volume loss?
 ```
 ceiling((4 * (qnorm(0.95) - qnorm(0.1)))^2)  ## [1] 138
+
+power.t.test(power=0.9, delta=0.01, sd=0.04, type="one.sample", alt="one.sided")$n  ## [1] 138.3856
 ```
 #### Q9
 As you increase the type one error rate, \alpha α, what happens to power?  
