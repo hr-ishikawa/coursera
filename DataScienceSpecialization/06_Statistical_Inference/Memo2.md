@@ -590,13 +590,14 @@ H_0 : μ=1,078?
 No you wouldn't reject.  
 No, you would fail to reject. The 95% interval would be wider than the 90% interval. Since 1,078 is in the narrower 90% interval, it would also be in the wider 95% interval. Thus, in either case it's in the interval and so you would fail to reject.
 #### Q7
+Researchers would like to conduct a study of 100 healthy adults to detect a four year mean brain volume loss of .01mm^3. Assume that the standard deviation of four year volume loss in this population is .04mm^3. About what would be the power of the study for a 5% one sided test versus a null hypothesis of no volume loss?
 ```
 pnorm(1.645 * 0.004, mean = 0.01, sd = 0.004, lower.tail = FALSE)  ## [1] 0.8037
 
 power.t.test(n=100, delta=0.01, sd=0.04, type="one.sample", alt="one.sided")$power  ## [1] 0.7989855
 ```
 #### Q8
-Researchers would like to conduct a study of 100 healthy adults to detect a four year mean brain volume loss of .01mm^3. Assume that the standard deviation of four year volume loss in this population is .04mm^3. About what would be the power of the study for a 5% one sided test versus a null hypothesis of no volume loss?
+Researchers would like to conduct a study of n n healthy adults to detect a four year mean brain volume loss of .01mm^3. Assume that the standard deviation of four year volume loss in this population is .04mm^3. About what would be the value of n needed for 90% power of type one error rate of 5% one sided test versus a null hypothesis of no volume loss?
 ```
 ceiling((4 * (qnorm(0.95) - qnorm(0.1)))^2)  ## [1] 138
 
