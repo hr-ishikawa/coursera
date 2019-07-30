@@ -297,6 +297,25 @@ s <- sqrt(((n1 - 1) * s1^2 + (n2 - 1) * s2^2)/(n1 + n2 - 2))
 
 ### Power
 
+H_0 : mu=30, sd=4, n=16
+H_a : mu>30,
+t <- (X'-30)/(s/sqrt(n))
+
+
+### Normal Distribution
+z <- qnorm(.95,sd=1) # [1] 1.644854
+pnorm(30+z,32,sd=1,lower.tail=FALSE) # [1] 0.63876
+
+
+power.t.test(n=16, delta=2/4, sd=1, type="one.sample", alt="one.sided")$power # [1] 0.6040329
+solve for the sample size n
+power.t.test(power=0.8, delta= 2/4, sd=1, type="one.sample", alt="one.sided")$n # [1] 26.13751
+find delta
+power.t.test(power=0.8, n=26, sd=1, type="one.sample", alt="one.sided")$delta # [1] 0.5013986
+
+
+
+### http://www.mus-nh.city.osaka.jp/iso/argo/nl11/nl11-3-16.pdf
 
 帰無仮説（H0）(「差がない」ないし「同じである」)
   有意差が出れば、一定の危険率（α）のもとに「同じであるとはいえない」＝「差がある」と結論
@@ -318,3 +337,155 @@ s <- sqrt(((n1 - 1) * s1^2 + (n2 - 1) * s2^2)/(n1 + n2 - 2))
 
 
 
+例  
+捕食性巻貝A種の、フジツボB種に対する捕食圧を、  
+対応2資料t検定で分析するケースを取り上げる。  
+実験区コントロール区を隣り合わせに4ペア設置  
+実験区のみに同数のA種を導入する。  
+4組内での実験区とコントロール区のB種の密度差（実験区における減少量）は  
+30個体／㎡（標準偏差SD=20）であった。  
+
+帰無仮説H0：A種の存在はB種の密度を減少させない  
+実験は小標本であるからt検定  
+片側検定  
+
+t=(m－μ)/s×√n（m,標本平均；μ,母集団平均；s,標本分散；n,標本数）  
+t=(30－0)/20×√4 = 3.0  
+qt(0.95,3)  ## [1] 2.353363  < 3.0  
+自由度=3、t=2.35以上になる確率が0.05であるから、mはP<0.05の棄却域  
+ ==> 「危険率5％で（ないし有意水準95％で）H0(密度を減少させない)は棄却された」  
+ ==> 「A種のB種に対する捕食圧」は「無いとは言えない」==>   
+ 「存在するらしい」
+
+この時の「5％」がTypeIエラー（α=0.05）==> 偽陽性リスク  
+
+
+### TypeII error（第2種の過誤）とStatistical power（検出力）
+
+例  
+X型: 平均14.0mm(SD,3.0mm)、
+Y型: 平均17.0mm(SD,3.0mm)
+共に正規分布
+標本平均: 15.0mm(SD,3.0mm)、標本数9　はどちらに属するか
+
+1) X型　H0：サンプルはX型に属する
+H0の分布に注目して、片側検定(一方向の差異)のTypeIエラー検定  
+t=(15.0－14.0)/3×√9=1.0、t分布表で、自由度9－1=8におけるP=0.19(pt(t,df=8)=0.)  
+危険率α=0.05のもとで、標本集団とX型母集団との差は有意ではない  
+(0.19 > 0.05)  
+
+2) Y型  対立仮説Ha：サンプルはY型に属する  
+t=(17.0－14.0)/3×√9=2.0、自由度８におけるP=0.04(pt(t,df=8)=0.040)となり、  
+Y型平均値との差は有意（片側検定）。  
+(0.04 < 0.05)  
+
+この時のP=0.04がTypeIIエラーβ、1－β=1－0.04=0.96が、検出力と呼ばれるものである。  
+
+#### TypeI error（α、危険率）
+実際にはH0が正しいにもかかわらず、それを誤りと判定する確率。差がないのにあると判断してしまう危険の率。
+#### 有意水準
+Significance level (1－α=0.95)  
+
+#### TypeII error（β）
+実際にはHaが正しいにもかかわらず、それを誤りとみなす確率。  
+#### 検出力
+tatistical power (ないし単にpower、1－β)  
+
+HAが正しいときに、それを棄却せずにすます確率。これをH0の側から見ると、H0＝notHAにより、H0が誤っているとき、それを正しく認める確率となる。差の存在を正しく検出する力、と考えてよいだろう。別の見方をすると、検出力が大きいということは、TypeIIエラーβが小さいことである。βは上に述べたように「H0を正しいと認めたとき、それが誤っている確率」であるから、βが小さいということは「差なし」と判定したときの信頼度が高いことになる。つまり、「差なし」とか「同じ」と言うためには、検出力が十分高くなければならない。そしてこれが、実用上最も重要な検出力の意味である。検出力を計算することを、poweranalysis（検出力分析）と呼ぶ。
+
+
+### Multiple Testing
+
+A Type I error is rejecting a true hypothesis -> convicting an innocent person  
+Type I error: 仮説の正しさの棄却　-> 無実(仮説)の人を有罪(棄却)とすること  
+
+A Type II error is failing to reject a false hypothesis -> acquitting a guilty person  
+A Type II error: 対立仮説の棄却に失敗する -> 有罪(対立仮説)の人を無罪(棄却に失敗)とすること  
+
+The null hypothes is represents the status_quo and is assumed true
+
+The p-value is "the probability under the null hypothesis of obtaining evidence as or more extreme than your test statistic (obtained from your observed data) in the direction of the alternative hypothesis."   
+
+method="bonferroni" to control the FWER.
+sum(p.adjust(pValues,method="bonferroni") < 0.05)   # [1] 0
+So the correction eliminated all the false positives that had passed the uncorrected alpha test. 
+修正されていないアルファテストに合格したすべての誤検知が排除されました。
+
+the method "BH" to control the FDR.
+sum(p.adjust(pValues,method="BH") < 0.05)  # [1] 0
+BH法ではすべての誤検知も排除されました。
+
+
+> table(pValues2<.05,trueStatus)
+       trueStatus
+        not zero zero
+  FALSE        0  476
+  TRUE       500   24
+
+> table(p.adjust(pValues2,method="bonferroni")<0.05,trueStatus)
+       trueStatus
+        not zero zero
+  FALSE       23  500
+  TRUE       477    0
+
+> table(p.adjust(pValues2,method="BH")<0.05,trueStatus)
+       trueStatus
+        not zero zero
+  FALSE        0  487
+  TRUE       500   13
+
+
+### Resampling
+### Bootstrapping
+```
+median(resampledMedians) ## [1] 68.61582
+
+median(fh) ## [1] 67.7666
+B <- 1000
+sam <- sample(fh,nh*B,replace=TRUE)
+resam <- matrix(sam,B,nh) 
+meds <- apply(resam,1,median)
+median(meds) ## [1] 67.7666
+median(meds)-median(fh) ## [1] 0
+sd(meds) ## [1] 0.1059033
+sd(resampledMedians) ## [1] 0.08493945
+quantile(resampledMedians,c(.025,.975))
+##     2.5%    97.5% 
+## 68.43713 68.81649 
+quantile(meds,c(.025,.975))
+##     2.5%    97.5% 
+## 67.54033 67.94425 
+
+dim(InsectSprays) ## [1] 72  2
+
+```
+### 順列検定 (permutation testing)
+As bootstrapping did, permutation testing samples a single dataset a zillion times and calculates a statistic based on these samplings.
+
+```
+head(InsectSprays)
+#  count spray
+#1    10     A
+#2     7     A
+#3    20     A
+
+range(Bdata$count) ## [1]  7 21
+range(Cdata$count) ## [1] 0 7
+Cdata$count ## [1] 0 1 7 2 3 1 2 1 3 0 1 4
+Bdata$count ## [1] 11 17 21 11 16 14 17 17 19 21  7 13
+```
+H_0: B,C 平均が等しい
+```
+BCcounts ##  [1] 11 17 21 11 16 14 17 17 19 21  7 13  0  1  7  2  3  1  2  1  3  0  1  4
+group    ## [1] "B" "B" "B" "B" "B" "B" "B" "B" "B" "B" "B" "B" "C" "C" "C" "C" "C" "C" "C" "C" "C" "C" "C" "C"
+testStat
+## function(w, g) mean(w[g == "B"]) - mean(w[g == "C"])
+obs <- testStat(BCcounts,group) ## [1] 13.25
+mean(Bdata$count-Cdata$count) ## [1] 13.25
+
+perms <- sapply(1 : 10000, function(i) testStat(BCcounts, sample(group)))
+mean(perms>obs) ## [1] 0
+
+```
+0 < 13.25  
+Here's a histogram of the difference of the means. Looks pretty normal, right? We can see that the distribution runs roughly between -10 and +10 and it's centered around 0. The vertical line shows where the observed difference of means was and we see that it's pretty far away from the distribution of the resampled permutations. This means that group identification did matter and sprays B and C were quite different.
