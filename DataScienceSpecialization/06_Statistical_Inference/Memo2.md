@@ -489,3 +489,116 @@ mean(perms>obs) ## [1] 0
 ```
 0 < 13.25  
 Here's a histogram of the difference of the means. Looks pretty normal, right? We can see that the distribution runs roughly between -10 and +10 and it's centered around 0. The vertical line shows where the observed difference of means was and we see that it's pretty far away from the distribution of the resampled permutations. This means that group identification did matter and sprays B and C were quite different.
+
+
+### QUIZ 4
+
+#### Q1
+A pharmaceutical company is interested in testing a potential blood pressure lowering medication. Their first examination considers only subjects that received the medication at baseline then two weeks later. The data are as follows (SBP in mmHg)  
+Consider testing the hypothesis that there was a mean reduction in blood pressure? Give the P-value for the associated two sided T test. (Hint, consider that the observations are paired.)
+```
+g1 <-c(140,138,150,148,135)
+g2 <-c(132,135,151,146,130)
+
+t.test(g1)
+## 
+##         One Sample t-test
+## 
+## data:  g1
+## t = 48.947, df = 4, p-value = 1.042e-06
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  134.134 150.266
+## sample estimates:
+## mean of x 
+##     142.2 
+
+t.test(g2)
+## 
+##         One Sample t-test
+## 
+## data:  g2
+## t = 33.724, df = 4, p-value = 4.612e-06
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  127.3726 150.2274
+## sample estimates:
+## mean of x 
+##     138.8 
+
+t.test(g2-g1, alternative="two.sided")
+## 
+##         One Sample t-test
+## 
+## data:  g2 - g1
+## t = -2.2616, df = 4, p-value = 0.08652
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  -7.5739122  0.7739122
+## sample estimates:
+## mean of x 
+##      -3.4 
+
+bl <- c(140, 138, 150, 148, 135)
+fu <- c(132, 135, 151, 146, 130)
+t.test(fu, bl, alternative = "two.sided", paired = TRUE)
+## Paired t-test
+## data: fu and bl
+## t = -2.262, df = 4, p-value = 0.08652
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+## -7.5739 0.7739
+## sample estimates:
+## mean of the differences
+## -3.4
+
+-t.test(fu, bl, alternative = "less", paired = TRUE)
+## Paired t-test
+## data: fu and bl
+## t = -2.262, df = 4, p-value = 0.04326
+## alternative hypothesis: true difference in means is less than 0
+## 95 percent confidence interval:-Inf -0.1951
+## sample estimates:
+## mean of the differences
+## -3.4
+```
+#### Q2
+A sample of 9 men yielded a sample average brain volume of 1,100cc and a standard deviation of 30cc. 
+What is the complete set of values of μ 0 that a test of H_0:μ=μ 0 would fail to reject the null hypothesis in a two sided 5% Students t-test?
+```
+1100 + c(-1, 1) * qt(0.975, 8) * 30/sqrt(9) [1] 1077 1123
+```
+#### Q3
+Researchers conducted a blind taste test of Coke versus Pepsi. Each of four people was asked which of two blinded drinks given in random order that they preferred. The data was such that 3 of the 4 people chose Coke. Assuming that this sample is representative, report a P-value for a test of the hypothesis that Coke is preferred to Pepsi using a one sided exact test.
+```
+pbinom(2, size = 4, prob = 0.5, lower.tail = FALSE)  ## [1] 0.3125
+choose(4, 3) * 0.5^4 + choose(4, 4) * 0.5^4  ## [1] 0.3125
+```
+#### Q4
+Infection rates at a hospital above 1 infection per 100 person days at risk are believed to be too high and are used as a benchmark. 
+A hospital that had previously been above the benchmark recently had 10 infections over the last 1,787 person days at risk. About what is the one sided P-value for the relevant test of whether the hospital is *below* the standard?
+```
+ppois(10, lambda = 0.01 * 1787)  ## ## [1] 0.03237
+```
+#### Q5
+```
+```
+#### Q6
+Brain volumes for 9 men yielded a 90% confidence interval of 1,077 cc to 1,123 cc. Would you reject in a two sided 5% hypothesis test of 
+H_0 : μ=1,078?
+
+No you wouldn't reject.  
+No, you would fail to reject. The 95% interval would be wider than the 90% interval. Since 1,078 is in the narrower 90% interval, it would also be in the wider 95% interval. Thus, in either case it's in the interval and so you would fail to reject.
+#### Q7
+```
+pnorm(1.645 * 0.004, mean = 0.01, sd = 0.004, lower.tail = FALSE)  ## [1] 0.8037
+```
+#### Q8
+Researchers would like to conduct a study of 100 healthy adults to detect a four year mean brain volume loss of .01mm^3. Assume that the standard deviation of four year volume loss in this population is .04mm^3. About what would be the power of the study for a 5% one sided test versus a null hypothesis of no volume loss?
+```
+ceiling((4 * (qnorm(0.95) - qnorm(0.1)))^2)  ## [1] 138
+```
+#### Q9
+As you increase the type one error rate, \alpha α, what happens to power?  
+You will get larger power.  
+As you require less evidence to reject, i.e. your \alpha α rate goes up, you will have larger power.
