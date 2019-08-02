@@ -1,0 +1,106 @@
+---
+title: "Statistical Inference Course Project"
+author: "hiroo.ishikawa"
+date: "2019/7/31"
+output: html_document
+---
+```{r message=FALSE}
+library(tidyverse)
+```
+## 1. A simulation exercise
+
+Investigate the exponential distribution in R and compare it with the Central Limit Theorem.
+
+
+### 1. Show the sample mean and compare it to the theoretical mean of the distribution.
+
+The Samples is generate by R function rexp(n, lambda), where lamda is 0.2. First time, number of samples (n) start with 40.
+
+Draw Graphs the histogram of samples and the ideal distribution line.
+And compare each calculated means.
+
+```{r}
+set.seed(0)
+n       <- 40 # number of sampling
+lambda  <- 0.2
+exps    <- rexp(n, lambda) # Sampling
+exps_mn <- mean(exps)
+xi      <- c(0.01,seq(0.1,max(exps),by=0.1))
+expi    <- dexp(xi,lambda)  # Ideal distribution
+expi_mn <- 1/lambda
+
+ggplot()+
+    geom_histogram(aes(x=exps),bins=max(exps),color='black',fill='lightblue')+
+    geom_vline(xintercept=exps_mn, color='blue', size=1) +
+    geom_text(aes(x=exps_mn,y=n*expi[1]*0.95), color='blue', hjust=-0.1, label=sprintf("mean=%3.2f", exps_mn)) +
+    geom_line(aes(x=xi,n*expi),color='red', size=1.2) +
+    geom_vline(xintercept=expi_mn, color='red', size=1) +
+    geom_text(aes(x=expi_mn,y=n*expi[1]*0.85), color='red', hjust=-0.1, label=sprintf("mean=%3.2f", expi_mn)) +
+    ggtitle('fig1. The histogrem of simurate and the ideal of the exponential distribution')
+    
+```
+
+#### Results
+
+The computed sample mean is 4.78, and
+the theoretical mean (1/lambda, that is expected value) is 5.00. 
+
+They are very close, in spite that the histogram looks the very up and down from the ideal line.
+
+### 2. Show how variable the sample is (via variance) and compare it to the theoretical variance of the distribution.
+```{r}
+var(exps)   # the variance of samples
+1/lambda^2  # the variance of idial distribution
+    
+```
+The sample Variance is 23.9, and
+the Comuted theoretical variance (1/lambda^2) is 25. 
+
+
+### 3. Show that the distribution is approximately normal.
+
+```{r}
+set.seed(0)
+n       <- 1000
+ns      <- 40 # number of sampling
+lambda  <- 0.2
+# Append mean for each 40 Samples
+exps_mns <- NULL
+for (i in 1 : n){ exps_mns <- c(exps_mns, mean(rexp(n, lambda))) }
+exps_mn_mns <- mean(exps_mns)
+
+ggplot()+
+    geom_histogram(aes(x=exps_mns),bins=40,color='black',fill='lightblue')+
+    geom_vline(xintercept=exps_mn_mns, color='blue', size=1) +
+    geom_text(aes(x=exps_mn,y=10), color='blue', hjust=-0.1, label=sprintf("mean of means=%3.2f", exps_mn_mns)) +
+    ggtitle('fig2. The histogrem of the means of simurate of the exponential distribution')
+```
+
+
+## 2. Basic inferential data analysis
+First, Check the characteristics of the data.
+```{r}
+head(ToothGrowth,4)
+summary(ToothGrowth)
+table(ToothGrowth$supp,ToothGrowth$dose)
+
+ToothGrowth <- ToothGrowth %>% mutate(dose=factor(dose))
+ToothGrowth <- ToothGrowth %>% mutate(len=factor(len))
+ggplot(ToothGrowth) +
+    geom_bar(aes(x=supp,y=len, fill=dose), stat='identity', position='dodge')
+```
+
+http://monge.tec.fukuoka-u.ac.jp/R_analysis/sample1_anova02_ToothGrowth.html
+
+
+First, Check the characteristics of the data.
+```{r}
+head(ToothGrowth,4)
+summary(ToothGrowth)
+table(ToothGrowth$supp,ToothGrowth$dose)
+
+ToothGrowth <- ToothGrowth %>% mutate(dose=factor(dose))
+ToothGrowth <- ToothGrowth %>% mutate(len=factor(len))
+ggplot(ToothGrowth) +
+    geom_bar(aes(x=supp,y=len, fill=dose), stat='identity', position='dodge')
+```
