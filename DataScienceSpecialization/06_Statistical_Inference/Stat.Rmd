@@ -2,7 +2,9 @@
 title: "Statistical Inference Course Project"
 author: "hiroo.ishikawa"
 date: "2019/7/31"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 ```{r message=FALSE}
 library(tidyverse)
@@ -14,7 +16,7 @@ Investigate the exponential distribution in R and compare it with the Central Li
 
 ### 1. Show the sample mean and compare it to the theoretical mean of the distribution.
 
-The Samples is generate by R function rexp(n, lambda), where lamda is 0.2. First time, number of samples (n) start with 40.
+The Samples is generate by R exponential distribution function "rexp(n, lambda)", where lamda is 0.2. the number of samples (n) is 40.
 
 Draw Graphs the histogram of samples and the ideal distribution line.
 And compare each calculated means.
@@ -28,36 +30,39 @@ exps_mn <- mean(exps)
 xi      <- c(0.01,seq(0.1,max(exps),by=0.1))
 expi    <- dexp(xi,lambda)  # Ideal distribution
 expi_mn <- 1/lambda
-
 ggplot()+
     geom_histogram(aes(x=exps),bins=max(exps),color='black',fill='lightblue')+
     geom_vline(xintercept=exps_mn, color='blue', size=1) +
-    geom_text(aes(x=exps_mn,y=n*expi[1]*0.95), color='blue', hjust=-0.1, label=sprintf("mean=%3.2f", exps_mn)) +
+    geom_text(aes(x=exps_mn,y=n*expi[1]*0.95), color='blue', hjust=-0.1,
+              label=sprintf("mean=%3.2f", exps_mn)) +
     geom_line(aes(x=xi,n*expi),color='red', size=1.2) +
     geom_vline(xintercept=expi_mn, color='red', size=1) +
-    geom_text(aes(x=expi_mn,y=n*expi[1]*0.85), color='red', hjust=-0.1, label=sprintf("mean=%3.2f", expi_mn)) +
-    ggtitle('fig1. The histogrem of simurate and the ideal of the exponential distribution')
-    
+    geom_text(aes(x=expi_mn,y=n*expi[1]*0.85), color='red', hjust=-0.1, 
+              label=sprintf("mean=%3.2f", expi_mn)) +
+    ggtitle('fig1. The histogrem of simurate and the theoretical the exponential distribution')
 ```
 
 #### Results
 
-The computed sample mean is 4.78, and
-the theoretical mean (1/lambda, that is expected value) is 5.00. 
+Show the fig.2. The light blue bars is histogram of exponential distribution simuration. And additional red curve is theoretical exponential distribution.
 
-They are very close, in spite that the histogram looks the very up and down from the ideal line.
+The calculated mean of samples is 4.78, and
+the theoretical mean (1/lambda, that is expected value) is 5.00. 
+They are close, in spite that the histogram looks the very up and down from the ideal line.
 
 ### 2. Show how variable the sample is (via variance) and compare it to the theoretical variance of the distribution.
 ```{r}
-var(exps)   # the variance of samples
-1/lambda^2  # the variance of idial distribution
-    
+exps_var <- var(exps)   # the variance of samples
+expi_var <- 1/lambda^2  # the variance of idial distribution
+cat ('Calculated variance, from sampes=',exps_var,'; from theoretical=',expi_var)    
 ```
 The sample Variance is 23.9, and
-the Comuted theoretical variance (1/lambda^2) is 25. 
-
+the theoretical variance (1/lambda^2) is 25. 
+They are close too.
 
 ### 3. Show that the distribution is approximately normal.
+
+To explain the Central Limit Theorem, Repeat simulation of exponential distribution 1000 times, and create the histogram of means of each simulation.
 
 ```{r}
 set.seed(0)
@@ -68,39 +73,122 @@ lambda  <- 0.2
 exps_mns <- NULL
 for (i in 1 : n){ exps_mns <- c(exps_mns, mean(rexp(n, lambda))) }
 exps_mn_mns <- mean(exps_mns)
+nori_mn <- 1/lambda
+xi      <- seq(min(exps_mns),max(exps_mns),by=0.01)
+nori    <- 25*dnorm(xi,mean=nori_mn,sd=sd(exps_mns))  # Ideal distribution
 
 ggplot()+
     geom_histogram(aes(x=exps_mns),bins=40,color='black',fill='lightblue')+
     geom_vline(xintercept=exps_mn_mns, color='blue', size=1) +
-    geom_text(aes(x=exps_mn,y=10), color='blue', hjust=-0.1, label=sprintf("mean of means=%3.2f", exps_mn_mns)) +
-    ggtitle('fig2. The histogrem of the means of simurate of the exponential distribution')
+    geom_text(aes(x=exps_mn_mns,y=20), color='blue', 
+              label=sprintf("mean of means=%3.2f", exps_mn_mns)) +
+    geom_line(aes(x=xi,nori),color='red', size=1.2) +
+    geom_vline(xintercept=nori_mn, color='red', size=1) +
+    geom_text(aes(x=nori_mn,y=10), color='red', hjust=-0.1, 
+              label=sprintf("mean=%3.2f", nori_mn)) +
+    ggtitle('fig2. The histogrem of means of the exponential distribution simurations')
 ```
+
+### Results;
+
+Show the fig.2. The light blue bars is histogram of means of the exponential distribution simurations.
+And additional red curve is theoretical normal distribution to compare clearly.
+The shape of the histgram looks like the normal distribution. 
+
+The calculated mean of mean of samples is 5.01, and
+the theoretical mean is 5.00. 
+They beacome more closely.
+
+The Central Limit Theorem, the sample means approaches a normal distribution as the sample size gets larger for any shape of the population distribution (in this time is exponential) was shown above.
 
 
 ## 2. Basic inferential data analysis
-First, Check the characteristics of the data.
-```{r}
-head(ToothGrowth,4)
-summary(ToothGrowth)
-table(ToothGrowth$supp,ToothGrowth$dose)
 
-ToothGrowth <- ToothGrowth %>% mutate(dose=factor(dose))
-ToothGrowth <- ToothGrowth %>% mutate(len=factor(len))
-ggplot(ToothGrowth) +
-    geom_bar(aes(x=supp,y=len, fill=dose), stat='identity', position='dodge')
-```
+Use the buildin datasets 'ToothGrowth', perform some basic exploratory data analyses.
 
-http://monge.tec.fukuoka-u.ac.jp/R_analysis/sample1_anova02_ToothGrowth.html
-
+The response is the length of odontoblasts (cells responsible for tooth growth) in 60 guinea pigs. Each animal received one of three dose levels of vitamin C (0.5, 1, and 2 mg/day) by one of two delivery methods, orange juice or ascorbic acid (a form of vitamin C and coded as VC).
 
 First, Check the characteristics of the data.
 ```{r}
 head(ToothGrowth,4)
 summary(ToothGrowth)
 table(ToothGrowth$supp,ToothGrowth$dose)
-
-ToothGrowth <- ToothGrowth %>% mutate(dose=factor(dose))
-ToothGrowth <- ToothGrowth %>% mutate(len=factor(len))
-ggplot(ToothGrowth) +
-    geom_bar(aes(x=supp,y=len, fill=dose), stat='identity', position='dodge')
 ```
+
+
+
+```{r}
+ToothGrowth <- ToothGrowth %>% mutate(dose=factor(dose))
+
+ggplot(ToothGrowth, aes(x=dose,y=len)) + 
+    geom_boxplot(aes(fill=dose), color='gray50', width=0.5, outlier.shape=NA) + 
+    geom_point(  aes(color=dose), shape=1, size=3 ) +
+    facet_wrap( ~supp) + ggtitle('fig1. ToothGrowth - the length quantile by Supplement and dose') +
+    scale_color_manual(values=c('red','forestgreen','navyblue')) +
+    scale_fill_manual( values=c('pink','palegreen','lightblue'))
+
+ggplot(ToothGrowth, aes(x=len)) + 
+    geom_histogram(bins=20,color='black',fill='lightblue') +
+    facet_grid(dose~supp) + ggtitle('fig2. ToothGrowth - the length distribution by Supplement and dose')
+```
+
+### Basic summary of the data
+
+The conditions by combination of 2 Supplement type (OJ and VC) and 3 dose levels(0.5, 1, 2).
+The total 60 length data from 10 samples for each conditions.
+the samples distribution of each condition's  looks like nomal distribution.
+
+
+#### Compare the effection of dose for each supplement
+
+Apply hypothesis tests(t-test) to confirm relation the teeth length growth with dose levels.
+
+#### A. supplement: Orange Juice
+1) H_0: no difference between mean of dose=0.5 and dose=0.1 
+   H_a: mean(dose=0.5) < mean(dose=1) 
+
+```{r}
+g1 <- ToothGrowth %>% filter(supp=='OJ',dose==0.5) %>% pull(len)
+g2 <- ToothGrowth %>% filter(supp=='OJ',dose==1  ) %>% pull(len)
+p  <- t.test(g2,g1,paired=FALSE,var.equal=TRUE,alternative='greater')$p.value
+cat('T test: p-value=', p, ' < 0.05 is reject the null hypothesis.\n')
+```
+It is statistically significant that length at dose=1 is more greater than dose=0.5.
+
+2) H_0: no difference between mean of dose=1 and dose=2 
+   H_a: mean(dose=0.5) < mean(dose=1) 
+
+```{r}
+g1 <- ToothGrowth %>% filter(supp=='OJ',dose==1  ) %>% pull(len)
+g2 <- ToothGrowth %>% filter(supp=='OJ',dose==2  ) %>% pull(len)
+p  <- t.test(g2,g1,paired=FALSE,var.equal=TRUE,alternative='greater')$p.value
+cat('T test: p-value=', p, ' < 0.05 is reject the null hypothesis.\n')
+```
+It is statistically significant that length at dose=2 is more greater than dose=1.
+
+#### B. supplement: Vitamine C
+1) H_0: no difference between mean of dose=0.5 and dose=0.1 
+   H_a: mean(dose=0.5) < mean(dose=1) 
+
+```{r}
+g1 <- ToothGrowth %>% filter(supp=='VC',dose==0.5) %>% pull(len)
+g2 <- ToothGrowth %>% filter(supp=='VC',dose==1  ) %>% pull(len)
+p  <- t.test(g2,g1,paired=FALSE,var.equal=TRUE,alternative='greater')$p.value
+cat('T test: p-value=', p, ' < 0.05 is reject the null hypothesis.\n')
+```
+It is statistically significant that length at dose=1 is more greater than dose=0.5.
+
+2) H_0: no difference between mean of dose=1 and dose=2 
+   H_a: mean(dose=0.5) < mean(dose=1) 
+
+```{r}
+g1 <- ToothGrowth %>% filter(supp=='VC',dose==1  ) %>% pull(len)
+g2 <- ToothGrowth %>% filter(supp=='VC',dose==2  ) %>% pull(len)
+p  <- t.test(g2,g1,paired=FALSE,var.equal=TRUE,alternative='greater')$p.value
+cat('T test: p-value=', p, ' < 0.05 is reject the null hypothesis.\n')
+```
+It is statistically significant that length at dose=2 is more greater than dose=1.
+
+#### Conclusion
+
+In both supplimant type OJ and VC, there is a statistically significant as the dose increases, the mean of teeth length is longer, by one can reject the null hypothesis that the true no difference in means.
