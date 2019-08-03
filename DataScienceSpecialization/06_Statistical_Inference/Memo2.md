@@ -496,6 +496,9 @@ Here's a histogram of the difference of the means. Looks pretty normal, right? W
 #### Q1
 A pharmaceutical company is interested in testing a potential blood pressure lowering medication. Their first examination considers only subjects that received the medication at baseline then two weeks later. The data are as follows (SBP in mmHg)  
 Consider testing the hypothesis that there was a mean reduction in blood pressure? Give the P-value for the associated two sided T test. (Hint, consider that the observations are paired.)
+
+製薬会社は、潜在的な血圧降下薬のテストに興味を持っています。 彼らの最初の検査では、ベースラインで薬を服用し、2週間後に服用した被験者のみを考慮します。 データは次のとおりです（mmBP単位のSBP）
+血圧の平均低下があったという仮説の検証を検討してください。 関連する両側T検定のP値を与えます。 （ヒント、観測がペアになっていることを考慮してください。）
 ```
 g1 <-c(140,138,150,148,135)
 g2 <-c(132,135,151,146,130)
