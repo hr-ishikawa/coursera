@@ -37,6 +37,7 @@ vif(mdl) ## calculate the variance inflation factors
 ただし、除外すると、相関するリグレッサの係数推定値にバイアスがかかる場合がある。
 因子分析や主成分分析などの方法で、回帰分析を同等の非相関セットに変換できるが、
 変換されたリグレッサを使用すると、解釈が困難になる場合がある。
+VIF統計量は一般的に10以下であれば多重共線性がないとされる。理想値は2以下
 
 ### 残差 (Residuals)
 Yi = β0 + β*xi + εi  
@@ -45,6 +46,49 @@ Yi = β0 + β*xi + εi
 「残差」：観測可能なデータに基く誤差の推定値
 
 #### 分散分析：ANOVA
+fit1 <- lm(Fertility~Agriculture,swiss)
+fit3 <- lm(Fertility ~ Agriculture + Examination + Education, data=swiss)
+anova(fit1, fit3)
+Analysis of Variance Table
+
+Model 1: Fertility ~ Agriculture
+Model 2: Fertility ~ Agriculture + Examination + Education
+  Res.Df    RSS Df Sum of Sq      F    Pr(>F)    
+1     45 6283.1                                  
+2     43 3180.9  2    3102.2 20.968 4.407e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+表の右下にある3つのアスタリスク***は、帰無仮説が0.001レベルで拒否されることを示しているため、
+2つの追加の回帰変数の少なくとも1つが重要です。
+拒否は、F値に適用される右側FテストPr（> F）に基づいています。
+計算されたp値に基づいて、帰無仮説が誤って拒否されることはほとんどありません。 fit3はfit1よりもはるかに優れていると確信しています。  
+ただし、分散分析(analysis of variance)は、モデルの残差がほぼ正規分布であるという仮定に敏感です。
+したがって、正規性について残差をテストする価値があります。 
+Shapiro-Wilk検定はRでは迅速かつ簡単です。正規性は帰無仮説です。
+shapiro.test(fit3$residuals) 
+
+	Shapiro-Wilk normality test
+
+data:  fit3$residuals
+W = 0.97276, p-value = 0.336
+0.336のShapiro-Wilk p値は正規性を棄却できず、分散分析の信頼性をサポートします。
+
+anova(fit1, fit3, fit5, fit6)
+Analysis of Variance Table
+
+Model 1: Fertility ~ Agriculture
+Model 2: Fertility ~ Agriculture + Examination + Education
+Model 3: Fertility ~ Agriculture + Examination + Education + Catholic
+Model 4: Fertility ~ Agriculture + Examination + Education + Catholic + 
+    Infant.Mortality
+  Res.Df    RSS Df Sum of Sq       F    Pr(>F)    
+1     45 6283.1                                   
+2     43 3180.9  2   3102.19 30.2107 8.638e-09 ***
+3     42 2513.8  1    667.13 12.9937 0.0008387 ***
+4     41 2105.0  1    408.75  7.9612 0.0073357 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+各モデルは、その前身を大幅に改善しているようです。
 
 
 ### influence, leverage
