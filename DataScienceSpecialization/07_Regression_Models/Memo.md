@@ -1,3 +1,38 @@
+## Regression Models Course Notes
+Recuture Note http://sux13.github.io/DataScienceSpCourseNotes/7_REGMODS/Regression_Models_Course_Notes.html
+Presentaion https://github.com/DataScienceSpecialization/courses/tree/master/07_RegressionModels/pdfs
+
+## Model Selection
+
+#### Example: Variance Inflation Factors
+data(swiss)
+fit  <- lm(Fertility ~ Agriculture, data=swiss)
+fit2 <- lm(Fertility ~ Agriculture + Examination, data=swiss)
+fit3 <- lm(Fertility ~ Agriculture + Examination + Education, data=swiss)
+# calculate ratios of variances for Agriculture coef for fit2 and fit3 w.r.t fit1
+c(summary(fit2)$cov.unscaled[2,2], summary(fit3)$cov.unscaled[2,2]) / a - 1
+[1] 0.8915757 1.0891588
+
+anova(fit1, fit3, fit5)
+Analysis of Variance Table
+
+Model 1: Fertility ~ Agriculture
+Model 2: Fertility ~ Agriculture + Examination + Education
+Model 3: Fertility ~ Agriculture + Examination + Education + Catholic + 
+    Infant.Mortality
+  Res.Df  RSS Df Sum of Sq    F  Pr(>F)    
+1     45 6283                              
+2     43 3181  2      3102 30.2 8.6e-09 ***
+3     41 2105  2      1076 10.5 0.00021 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
+
+#### VIF (Variance Inflation Factors)
+library(car)
+fit <- lm(Fertility ~ . , data = swiss)
+vif(fit) ## calculate the variance inflation factors
+
+
 ### 残差 (Residuals)
 Yi = β0 + β*xi + εi  
 ここで「誤差」 εi , i = 1, ... , n は統計的に独立 ですべて同じ分散 σ2 をもつ
@@ -93,5 +128,5 @@ As an example, imagine if we sprayed insect pests with 4 different pesticides an
 
 #### Odds
 
-
+Odds = ρ/(1-ρ) 
 
