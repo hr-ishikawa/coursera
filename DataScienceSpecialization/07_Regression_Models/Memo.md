@@ -9,7 +9,7 @@ data(swiss)
 fit  <- lm(Fertility ~ Agriculture, data=swiss)
 fit2 <- lm(Fertility ~ Agriculture + Examination, data=swiss)
 fit3 <- lm(Fertility ~ Agriculture + Examination + Education, data=swiss)
-# calculate ratios of variances for Agriculture coef for fit2 and fit3 w.r.t fit1
+  calculate ratios of variances for Agriculture coef for fit2 and fit3 w.r.t fit1
 c(summary(fit2)$cov.unscaled[2,2], summary(fit3)$cov.unscaled[2,2]) / a - 1
 [1] 0.8915757 1.0891588
 
@@ -29,9 +29,14 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 
 #### VIF (Variance Inflation Factors)
 library(car)
-fit <- lm(Fertility ~ . , data = swiss)
-vif(fit) ## calculate the variance inflation factors
-
+mdl <- lm(Fertility ~ . , data = swiss)
+vif(mdl) ## calculate the variance inflation factors
+     Agriculture      Examination        Education         Catholic Infant.Mortality  
+        2.284129         3.675420         2.774943         1.937160         1.107542  
+他の変数との相関。　数値が大きいと他の変数と相関している割合が大きい。
+ただし、除外すると、相関するリグレッサの係数推定値にバイアスがかかる場合がある。
+因子分析や主成分分析などの方法で、回帰分析を同等の非相関セットに変換できるが、
+変換されたリグレッサを使用すると、解釈が困難になる場合がある。
 
 ### 残差 (Residuals)
 Yi = β0 + β*xi + εi  
