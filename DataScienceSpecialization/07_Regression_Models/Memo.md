@@ -1,12 +1,18 @@
 ### 残差 (Residuals)
+Yi = β0 + β*xi + εi  
+ここで「誤差」 εi , i = 1, ... , n は統計的に独立 ですべて同じ分散 σ2 をもつ
 
-## influence, leverage
+「残差」：観測可能なデータに基く誤差の推定値
+
+#### 分散分析：ANOVA
+
+
+### influence, leverage
 
 fit <- lm(y~x, data=df)
 plot(fit, which=1)
 
 fit %>% dfbase()               ## 各データ(行)に対して、そのデータを除いたものと含めたもの回帰を行い、切片と傾きの差を求める。
-
 
 
 ### influenceまたはleverage
@@ -49,6 +55,15 @@ the Studentized residual for the outlier sample
 resid(fit)[N] / (sigma1 * sqrt(1-hatvalues(fit)[N]) )
 
 #### studentized residuals
+残差をその標準偏差の推定量で割って補正  
+i 番のデータが「外れ値」かどうかを検討する時には、i番の観測を分散の推定には用いないことが望ましい。結局、以下の推定量が用いられる。
+
+i番の観測を「除外」、「外部スチューデント化残差」 (externally studentized residual)  
+              または「削除後スチューデント残差」 (deleted studentized residual)   
+i番の観測を「含む」、「内部スチューデント化残差」 (internally studentized residual)   
+誤差が独立で、期待値 0 で 分散 σ2 の 正規分布に従う場合、i 番の外部スチューデント化残差の確率分布はスチューデントのt分布となる。その自由度は n − m − 1 であり、値域は (-∞, +∞) である。  
+???
+
 rstudent(fit)                 ## 上記計算を実施  
 
 #### Cook's distance 
@@ -57,6 +72,26 @@ sum(dy^2)/(2*sigma^2)
 
 cooks.distance(fit)           ## 上記計算を実施  
 
+
+
+## GLM
+
+共変量 covariate = 説明変数、独立変数、予測因子　連続な変数(質的に表される変数は要因と呼ばれる)。  
+The alternative terms explanatory variable , independent variable , or predictor, are used in a regression analysis . In econometrics , the term “control variable” is usually used instead of “covariate”.  
+代替用語の説明変数、独立変数、または予測変数は、回帰分析で使用されます。 計量経済学では、「共変量」の代わりに「制御変数」という用語が通常使用されます。  
+
+### Binary GLM
+
+バイナリGLMは、2つの値のみをとることができる結果をモデル化しようとすることに由来します。 いくつかの例には、研究の終了時の生存の有無、チームの勝利と敗北、治療または製品の成功と失敗が含まれます。 多くの場合、これらの結果は、有名な確率論者および数学者にちなんで名付けられたベルヌーイ分布から、ベルヌーイの結果と呼ばれます。
+
+同じレベルの共変量値(covariate values)に対して複数の交換可能なバイナリ結果がある場合、それは二項データであり、0と1を1のカウントに集約できます。  
+例として、害虫に4種類の農薬を散布し、それらが死んだかどうかを数える場合を想像してください。次に、各スプレーについて、スプレーされた死者数と総数でデータを要約し、ベルヌーイではなく二項分布としてデータを扱うことができます。
+If we happen to have several exchangeable binary outcomes for the same level of covariate values, then that is binomial data and we can aggregate the 0’s and 1’s into the count of 1’s. 
+As an example, imagine if we sprayed insect pests with 4 different pesticides and counted whether they died or not. Then for each spray, we could summarize the data with the count of dead and total number that were sprayed and treat the data as binomial rather than Bernoulli.
+
+
+
+#### Odds
 
 
 
