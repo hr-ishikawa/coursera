@@ -4,6 +4,30 @@ Presentaion https://github.com/DataScienceSpecialization/courses/tree/master/07_
 
 ## Model Selection
 
+### 共変量モデルの選択
+- 自動化された共変量/予測子の選択は難しい
+    - モデルの空間は、相互作用と多項式項で急速に爆発します
+    - 注：Practical Machine Learningクラスでは、予測のために大きなモデル空間を移動するための多くの最新の方法がカバーされます
+- 共変量の主成分分析（PCA）または因子分析モデルは、多くの場合、複雑な共変量空間の削減に役立ちます
+    - 最も多くの変動を捕捉する変数の線形結合を見つける
+- 優れた実験デザインにより、分析中に複雑なモデル検索の必要性を排除できます。
+    - ランダム化、成層化は、単純に最終モデルを助けることができます
+    - 残念ながら、設計の制御はしばしば制限されます
+- データの理解に基づいて共変量空間を手動で探索することも実行可能です
+    - 共変量調整と複数のモデルを使用して、モデルに特定の予測変数を追加する効果を調べます
+    - 注：これはそれほど体系的または効率的なアプローチではありませんが、プロセスを通じてデータについて多くのことを教える傾向があります
+- 対象のモデルがネストされている場合（つまり、1つのモデルが1つ以上の係数がゼロに設定された別のモデルの特別なケース）、それらを区別する多くのパラメーターがなければ、ネストされた尤度比テスト（ANOVA）を使用して見つけることができます最高のモデル
+    - 一度に1つまたは2つのリグレッサを追加すると、分散分析（ANOVA）がうまく機能します
+        - anova（fit1、fit2、fit3）=一連のネストされた線形回帰モデルのANOVAまたは分散分析（または逸脱）テーブルを実行します
+    - 注：モデルの順序を正しくして、結果が適切であるようにすることが非常に重要です。
+    - 例はここにあります
+- 異なるモデルを検索する別の代替方法は、赤池情報量基準（AIC）が最小の最適なモデルを見つけるために、回帰変数を一度に1つずつ繰り返し追加/削除するステップワイズ検索アルゴリズムです。
+    - step（lm、k = df）=与えられた線形モデルでステップワイズ回帰を実行して、最良の線形モデルを見つけて返します
+        - k = log（n）=観測数の対数としてkの値を指定すると、ステップワイズ回帰モデルはAICの代わりにベイジアン情報量基準（BIC）を使用するように強制されます
+        - 注：BICとAICの両方は、追加のペナルティ項を使用して回帰モデルにパラメーターを追加することを罰します。ペナルティはAICよりもBICの方が大きい
+    - MASS :: stepAIC（lm、k = df）=ステップワイズ回帰のより汎用的で厳密な実装
+    - 例はここにあります
+
 #### Example: Variance Inflation Factors
 data(swiss)
 fit  <- lm(Fertility ~ Agriculture, data=swiss)
@@ -13,6 +37,7 @@ fit3 <- lm(Fertility ~ Agriculture + Examination + Education, data=swiss)
 c(summary(fit2)$cov.unscaled[2,2], summary(fit3)$cov.unscaled[2,2]) / a - 1
 [1] 0.8915757 1.0891588
 
+#### anova()
 anova(fit1, fit3, fit5)
 Analysis of Variance Table
 
@@ -26,6 +51,55 @@ Model 3: Fertility ~ Agriculture + Examination + Education + Catholic +
 3     41 2105  2      1076 10.5 0.00021 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
+
+分散分析表  
+Res.Df = モデルの残差自由度  
+RSS = (Residual Sum of Squares)モデルの残差平方和、適合度  
+Df = あるモデルから次のモデルへの自由度の変化  
+Sum of Sq = あるモデルから次のモデルへの残差平方和の差/変化  
+F = F統計値(F statistic)、異なる変動源を反映する2つのスケーリングされた平方和の比率を測定  
+Pr（> F）= (p-value for the F statistic)モデルの変化が有意であるかどうかを示すF統計のp値  
+           = (両モデルの当てはまりの差は誤差の範囲内である確率)　　
+　　　　　　優位水準を5%とすれば0.05以下であれば適合性が向上していると判断できる。
+            
+上記の結果から、1番目から2番目、2番目から3番目のモデルの両方でRSSが大幅に減少し、モデルの適合性が向上することがわかります。  
+
+#### Step-wise Model Search
+
+fit <- lm(mpg ~ cyl + disp + hp + drat + wt, data = mtcars)  
+step(fit, k=log(nrow(mtcars)))  
+
+k = ペナルティとして使われる自由度数の倍数． k=2 が本来の AIC 法を与える．
+k=log(n) はしばしば BIC や SBC と呼ばれる
+
+Start:  AIC=73.75
+mpg ~ cyl + disp + hp + drat + wt
+       Df Sum of Sq    RSS    AIC
+- drat  1     3.018 170.44 70.854  <== この項目を削除した場合
+- disp  1     6.949 174.38 71.584
+- cyl   1    15.411 182.84 73.100
+<none>              167.43 73.748  <== 何も削除しない場合
+- hp    1    21.066 188.49 74.075
+- wt    1    77.476 244.90 82.453
+
+Step:  AIC=70.85                   <== 最も影響の少ない(AICの小さい)変数を削除したモデル
+mpg ~ cyl + disp + hp + wt
+       Df Sum of Sq    RSS    AIC
+- disp  1     6.176 176.62 68.528
+- hp    1    18.048 188.49 70.609
+<none>              170.44 70.854
+- cyl   1    24.546 194.99 71.694
+- wt    1    90.925 261.37 81.069
+
+<<略>>
+
+Call:
+lm(formula = mpg ~ cyl + wt, data = mtcars)
+
+Coefficients:
+(Intercept)          cyl           wt  
+     39.686       -1.508       -3.191  
+
 
 #### VIF (Variance Inflation Factors)
 library(car)
