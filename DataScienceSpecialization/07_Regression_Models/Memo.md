@@ -26,10 +26,51 @@ summary(fit)
 %% F-statistic: 16.86 on 1 and 30 DF,  p-value: 0.000285
 
 sumCoef <- summary(fit)$coefficients  
-sumCoef[1,1] + c(-1, 1) * qt(.975, df=fit$df) * sumCoef[1, 2]  ## 信頼区間 The 95% percent confidence interval for slope coefficient  sumCoef[2,1] + c(-1, 1) * qt(.975, df=fit$df) * sumCoef[2, 2]  ## 信頼区間 The 95% percent confidence interval for intercept coefficient 
+sumCoef[1,1] + c(-1, 1) * qt(.975, df=fit$df) * sumCoef[1, 2]  ## 信頼区間 The 95% percent confidence interval for slope coefficient  
+sumCoef[2,1] + c(-1, 1) * qt(.975, df=fit$df) * sumCoef[2, 2]  ## 信頼区間 The 95% percent confidence interval for intercept coefficient  
 
 summary(fit)$sigma  ##  the residual variation  
 
+#### factor
+
+mtcars2 <- mtcars %>% mutate(am=factor(am,levels=c(0,1),labels=c('auto','manu')))  
+mtcars2 %>% str  
+
+fit <- lm(mpg~am,mtcars2)  
+summary(fit)  
+%% Call:
+%% lm(formula = mpg ~ am, data = mtcars2)
+%% Residuals:
+%%     Min      1Q  Median      3Q     Max 
+%% -9.3923 -3.0923 -0.2974  3.2439  9.5077 
+%% Coefficients:
+%%             Estimate Std. Error t value Pr(>|t|)    
+%% (Intercept)   24.392      1.360  17.941  < 2e-16 ***
+%% ammanu        -7.245      1.764  -4.106 0.000285 ***
+%% ---
+%% Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+%%  
+%% Residual standard error: 4.902 on 30 degrees of freedom
+%% Multiple R-squared:  0.3598,	Adjusted R-squared:  0.3385 
+%% F-statistic: 16.86 on 1 and 30 DF,  p-value: 0.000285
+
+fit <- lm(mpg~am-1,mtcars2)  
+summary(fit)  
+%% Call:  
+%% lm(formula = mpg ~ am - 1, data = mtcars2)  
+%% Residuals:  
+%%     Min      1Q  Median      3Q     Max   
+%% -9.3923 -3.0923 -0.2974  3.2439  9.5077   
+%% Coefficients:  
+%%        Estimate Std. Error t value Pr(>|t|)  
+%% amauto   17.147      1.125   15.25 1.13e-15 ***    ## <== Estimateは平均値  
+%% ammanu   24.392      1.360   17.94  < 2e-16 ***  
+%% ---  
+%% Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1  
+%%  
+%% Residual standard error: 4.902 on 30 degrees of freedom  
+%% Multiple R-squared:  0.9487,	Adjusted R-squared:  0.9452   
+%% F-statistic: 277.2 on 2 and 30 DF,  p-value: < 2.2e-16  
 
 ## Multivariate Regression
 
