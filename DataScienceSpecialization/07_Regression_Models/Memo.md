@@ -34,7 +34,7 @@ summary(fit)$sigma  ##  the residual variation
 #### factor
 
 mtcars2 <- mtcars %>% mutate(am=factor(am,levels=c(0,1),labels=c('auto','manu')))  
-mtcars2 %>% str  
+mtcars2$am %>% str  
 
 fit <- lm(mpg~am,mtcars2)  
 summary(fit)  
@@ -45,8 +45,8 @@ summary(fit)
 %% -9.3923 -3.0923 -0.2974  3.2439  9.5077 
 %% Coefficients:
 %%             Estimate Std. Error t value Pr(>|t|)    
-%% (Intercept)   24.392      1.360  17.941  < 2e-16 ***
-%% ammanu        -7.245      1.764  -4.106 0.000285 ***
+%% (Intercept)   17.147      1.125  15.247 1.13e-15 ***
+%% ammanu         7.245      1.764   4.106 0.000285 ***
 %% ---
 %% Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 %%  
@@ -57,7 +57,7 @@ summary(fit)
 fit <- lm(mpg~am-1,mtcars2)  
 summary(fit)  
 %% Call:  
-%% lm(formula = mpg ~ am - 1, data = mtcars2)  
+%% lm(formula = mpg ~ am - 1, data = mtcars2)       ## <== -1 でInterceptがなくなる
 %% Residuals:  
 %%     Min      1Q  Median      3Q     Max   
 %% -9.3923 -3.0923 -0.2974  3.2439  9.5077   
