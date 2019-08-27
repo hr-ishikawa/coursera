@@ -2,6 +2,69 @@
 Recuture Note http://sux13.github.io/DataScienceSpCourseNotes/7_REGMODS/Regression_Models_Course_Notes.html
 Presentaion https://github.com/DataScienceSpecialization/courses/tree/master/07_RegressionModels/pdfs
 
+## Regression model
+
+fit = lm(mpg ~ am, data=mtcars)  
+summary(fit)
+
+%% Call:
+%% lm(formula = mpg ~ am, data = mtcars)
+%%
+%% Residuals:
+%%     Min      1Q  Median      3Q     Max 
+%% -9.3923 -3.0923 -0.2974  3.2439  9.5077 
+%% 
+%% Coefficients:
+%%             Estimate Std. Error t value Pr(>|t|)    
+%% (Intercept)   17.147      1.125  15.247 1.13e-15 ***
+%% am             7.245      1.764   4.106 0.000285 ***     ## <== Slope
+%% ---
+%% Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+%% 
+%% Residual standard error: 4.902 on 30 degrees of freedom
+%% Multiple R-squared:  0.3598,    Adjusted R-squared:  0.3385 
+%% F-statistic: 16.86 on 1 and 30 DF,  p-value: 0.000285
+
+sumCoef <- summary(fit)$coefficients  
+sumCoef[1,1] + c(-1, 1) * qt(.975, df=fit$df) * sumCoef[1, 2]  ## 信頼区間 The 95% percent confidence interval for slope coefficient  sumCoef[2,1] + c(-1, 1) * qt(.975, df=fit$df) * sumCoef[2, 2]  ## 信頼区間 The 95% percent confidence interval for intercept coefficient 
+
+summary(fit)$sigma  ##  the residual variation  
+
+
+## Multivariate Regression
+
+fit <- lm(Fertility~.,data=swiss )
+summary(fit)
+
+Call:
+lm(formula = Fertility ~ ., data = swiss)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-15.2743  -5.2617   0.5032   4.1198  15.3213 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(>|t|)    
+(Intercept)      66.91518   10.70604   6.250 1.91e-07 ***
+Agriculture      -0.17211    0.07030  -2.448  0.01873 *  
+Examination      -0.25801    0.25388  -1.016  0.31546    
+Education        -0.87094    0.18303  -4.758 2.43e-05 ***
+Catholic          0.10412    0.03526   2.953  0.00519 **  
+Infant.Mortality  1.07705    0.38172   2.822  0.00734 **  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 7.165 on 41 degrees of freedom
+Multiple R-squared:  0.7067,    Adjusted R-squared:  0.671 
+F-statistic: 19.76 on 5 and 41 DF,  p-value: 5.594e-10
+
+Multiple R-Squaredの値によって示されるのは 重相関係数の二乗(または決定係数)といい、説明力を示す値  
+予測変数を用いて目的変数(の２乗)をどの程度説明できるかを表す。その値が0.71 ならば、およそ 71% を説明できた、となる。  
+最後の行、F-statisticとはF値のことで、この結果得られたモデルのp値などを示しています。この例では p値は 5.594e-10 のため同%の水準で有意。
+
+
+### Interpretation of Coefficients
+
 ## Model Selection
 
 ### 共変量モデルの選択
@@ -69,8 +132,10 @@ Pr（> F）= (p-value for the F statistic)モデルの変化が有意である�
 fit <- lm(mpg ~ cyl + disp + hp + drat + wt, data = mtcars)  
 step(fit, k=log(nrow(mtcars)))  
 
-k = ペナルティとして使われる自由度数の倍数． k=2 が本来の AIC 法を与える．
-k=log(n) はしばしば BIC や SBC と呼ばれる
+k = ペナルティとして使われる自由度数の倍数．  
+k=2 AIC 法
+k=log(n) はしばしば BIC (Bayes Information Criterion)や SBC と呼ばれる
+BICは通常、AICよりも小さいモデルを選択する  
 
 Start:  AIC=73.75
 mpg ~ cyl + disp + hp + drat + wt
@@ -247,9 +312,127 @@ The alternative terms explanatory variable , independent variable , or predictor
 If we happen to have several exchangeable binary outcomes for the same level of covariate values, then that is binomial data and we can aggregate the 0’s and 1’s into the count of 1’s. 
 As an example, imagine if we sprayed insect pests with 4 different pesticides and counted whether they died or not. Then for each spray, we could summarize the data with the count of dead and total number that were sprayed and treat the data as binomial rather than Bernoulli.
 
+mdl <- glm(ravenWinNum ~ ravenScore, family=binomial, data=ravenData)  ## 勝利~得点を回帰
+lodds <- predict(mdl, data.frame(ravenScore=c(0, 3, 6)))               ## 得点に対するオッズを予測
+exp(lodds)/(1+exp(lodds))                                              ## 確率に変換
+        1         2         3 
+0.1570943 0.2041977 0.2610505                                          ## 得点0でも勝率16%?
+summary(mdl)
 
+Call:
+glm(formula = ravenWinNum ~ ravenScore, family = binomial, data = ravenData)
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.7575  -1.0999   0.5305   0.8060   1.4947  
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)
+(Intercept) -1.68001    1.55412  -1.081     0.28       ## exp(-1.68)は得点0時のオッズ => 確率: exp(-1.68)/(1+exp(-1.68))
+ravenScore   0.10658    0.06674   1.597     0.11       ## exp(0.1066) => 1.11 = 得点に対して、11%の増加
+(Dispersion parameter for binomial family taken to be 1)
+    Null deviance: 24.435  on 19  degrees of freedom
+Residual deviance: 20.895  on 18  degrees of freedom
+AIC: 24.895
+Number of Fisher Scoring iterations: 5
+
+exp(confint(mdl))                                      ## <= 係数b0とb1の95％信頼区間の下限と上限
+                  2.5 %   97.5 %
+(Intercept) 0.005674966 3.106384
+ravenScore  0.996229662 1.303304
+
+anova(mdl)
+Analysis of Deviance Table
+
+Model: binomial, link: logit
+Response: ravenWinNum
+Terms added sequentially (first to last)
+           Df Deviance Resid. Df Resid. Dev
+NULL                          19     24.435
+ravenScore  1   3.5398        18     20.895          ##  deviance=逸脱: 勾配を含むモデルの逸脱と切片b0のみを含むモデルの逸脱との差
+                                                     ## この値は、1自由度（2パラメーターから1パラメーターを引いた値、または同等の19-18）で中央にカイ二乗分布（大きなサンプルの場合）です。
+帰無仮説は、ravenScoreの係数がゼロであることです。この仮説を自信を持って拒否するには、3.5398を1自由度のカイ2乗分布の95パーセンタイルより大きくする必要があります。
+
+qchisq(0.95, 1) ## [1] 3.841459   ### パーセンタイルのしきい値を計算
+                ## 3.5398は95パーセンタイルのしきい値3.841459よりも小さいため、従来の5％レベルの帰無仮説と一致する
 
 #### Odds
 
 Odds = ρ/(1-ρ) 
+
+##### Q1
+
+Consider modeling the use of the autolander as the outcome (variable name use). 
+Fit a logistic regression model with autolander (variable auto) use (labeled as "auto" 1) versus not (0) as predicted by wind sign (variable wind). 
+
+Give the estimated odds ratio for autolander use comparing head winds, 
+labeled as "head" in the variable headwind (numerator) to tail winds (denominator).
+library(MASS)
+data(shuttle)
+%% Make our own variables just for illustration
+shuttle$auto <- 1 * (shuttle$use == "auto")
+shuttle$headwind <- 1 * (shuttle$wind == "head")
+fit <- glm(auto ~ headwind, data = shuttle, family = binomial)
+exp(coef(fit))
+%% (Intercept)    headwind 
+%%      1.3273      0.9687
+
+##### Q2
+ Give the estimated odds ratio for autolander use comparing head winds (numerator) to tail winds (denominator) adjusting for wind strength from the variable 
+
+shuttle$auto     <- 1 * (shuttle$use  == "auto")
+shuttle$headwind <- 1 * (shuttle$wind == "head")
+fit <- glm(auto ~ headwind + magn, data = shuttle, family = binomial)
+exp(coef(fit))
+
+(Intercept)    headwind  magnMedium     magnOut  magnStrong 
+     1.4852      0.9685      1.0000      0.6842      0.9376  <= 0.969
+
+
+
+
+
+
+#### glm-poisson
+
+mdl <- glm(visits ~ date, poisson, hits)               ## 訪問回数~日付
+summary(mdl)                                           ## summary(mdl) to examine the estimated coefficients and their significance.
+
+Call:
+glm(formula = visits ~ date, family = poisson, data = hits)
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-5.0466  -1.5908  -0.3198   0.9128  10.6545  
+Coefficients:
+              Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -3.275e+01  8.130e-01  -40.28   <2e-16 ***  # The Intercept b0, represents log average hits on R's Date 0, January 1, 1970. 
+date         2.293e-03  5.266e-05   43.55   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Dispersion parameter for poisson family taken to be 1)
+    Null deviance: 5150.0  on 730  degrees of freedom
+Residual deviance: 3121.6  on 729  degrees of freedom    ## 残留偏差もヌルよりも非常に小さく、強い効果を示しています
+AIC: 6069.6
+Number of Fisher Scoring iterations: 5
+
+exp(confint(mdl, 'date'))   ## exp（b1）の95％信頼区間を取得
+   2.5 %   97.5 % 
+1.002192 1.002399           ## 1日あたり1.002192から1.002399の間で増加すると推定されています。つまり、1日あたり0.2192％〜0.2399％
+
+which.max(hits[,'visits'])  ## [1] 704　最大訪問数の日付を求める
+hits[704,]
+          date visits simplystats
+704 2012-12-04     94          64
+mdl$fitted.values[704]
+    704 
+24.5478 
+
+lambda <- mdl$fitted.values[704]
+
+qpois(.95, lambda)  ## [1] 33 # 95％の確率で33回以下の訪問が発生するため、モデルによると30回の訪問はまれではありません。
+
+mdl2 <- glm(simplystats~date, poisson, hits, offset=log(visits + 1))
+
+qpois(.95, mdl2$fitted.values[704]) ## [1] 47
+
+
+
 
