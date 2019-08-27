@@ -1,0 +1,119 @@
+---
+title: "mtcars; mpg-transmission"
+author: "Ishikawa"
+date: "2019/8/24"
+output:
+  word_document: default
+  md_document: default
+  html_document: default
+---
+
+```{r message=FALSE}
+library(tidyverse)
+```
+
+### Introduction
+
+You work for Motor Trend, a magazine about the automobile industry. 
+Looking at a data set of a collection of cars, they are interested in exploring the relationship between a set of variables and miles per gallon (MPG) (outcome). They are particularly interested in the following two questions:
+
+- “Is an automatic or manual transmission better for MPG”
+- "Quantify the MPG difference between automatic and manual transmissions"
+
+
+### Executive Summary
+
+We use "mtcars" dataset built in R. 
+First, read the dataset and show outline of it.
+Second, do some exploratory data analyses for mpg and transmission that is auto or manual.
+In last, compare some regression models, consider whether the transmission influence to mpg or not.
+
+
+### Dataset
+
+The data was extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973–74 models).
+Here are the outline.
+
+```{r}
+mtcars %>% dim()
+mtcars %>% head()
+mtcars %>% str()
+```
+
+
+### Analysys
+
+From the format descriptions in the help, we focus following two variables.
+
+[, 1]	mpg	Miles/(US) gallon  
+[, 9]	am	Transmission (0 = automatic, 1 = manual)
+
+Check the relation between mpg and am.
+
+```{r}
+mtcars2 <- mtcars %>% mutate(am=factor(am, levels=(c(0,1)), labels=(c('Auto','Manual'))))
+table(mtcars2$am)
+ggplot(mtcars2) + ggtitle('fig.1 Transmission - Miles per Gallon') + xlab('Transmission') +
+    geom_boxplot(aes(x=am, y=mpg, fill=am ), width=0.5) + 
+    geom_point(  aes(x=am, y=mpg, color=am), size=3, alpha=0.4) +
+    scale_color_manual(values=c('darkred','darkgreen')) +
+    scale_fill_manual( values=c('pink','palegreen'))
+```
+
+It looks like Manual Transmission is better for mpg (longer distance runs at same fuel).
+We do T test to confirm the statistically significant.
+
+```{r}
+g1 <- mtcars2 %>% filter(am=='Auto'  ) %>% pull(mpg)
+g2 <- mtcars2 %>% filter(am=='Manual') %>% pull(mpg)
+p  <- t.test(g2,g1, paired=FALSE, var.equal=TRUE, alternative='greater')$p.value %>% format(digits=3)
+cat('T test: p-value=', p, ' < 0.05 is reject the null hypothesis (There is no deffrence.).\n')
+```
+
+By T test, we found out "Manual Transmission is better for mpg" is statistically significant.
+
+
+### Regression
+
+Check the am's strength as regressor.
+
+```{r}
+fit_am <- lm(mpg~am, data=mtcars)
+summary(fit_am)
+```
+
+By the regression from just "am", Adjusted R-squared is 0.3385.
+There is not a strong reration between mpg and am.
+
+
+#### Compare Regressin Models
+
+We set following regression models, compare them.
+
+Model 1) from just "am"  
+Model 2) all regressors exclude "am"  
+Model 3) all regressors  
+
+```{r}
+fit_excl <- lm(mpg~., data=(mtcars%>%select(-am)))
+fit_all  <- lm(mpg~., data= mtcars)
+
+anova(fit_am, fit_excl, fit_all)
+```
+
+Focus to the RSS (residual sum of suquare) of each model.
+Model 1 is 721, Model 2 is 158 and Model 3 is 147. 
+Model 2 is mutch better from Model 1. But Model 3 is not so better from Model 2. 
+The P-statistic of Model 3 is 0.23. It can reject that Model 3 is better.
+
+### Conclusion
+
+In focus to factors just mpg (miles per gallon) and am (auto or manual transmission), 
+the manual transmission is better for mpg.
+Otherwise include the other factors, in comparation of regression models, mpg is almost predicted by other factors.
+So, am is not important for mpg.
+
+As outcome of the product line of the cars, the choice the manual transmission is better for mpg.
+But whether auto or manual, transmission do not makes influence for mpg better essentially. 
+
+
