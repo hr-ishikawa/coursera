@@ -6,6 +6,50 @@
 
 qt(0.975, df=2) # 自由度2 
 
+### T検定 (T test)
+
+##### 一標本片側検定 (標本の平均がある値以上or以下であることの検定)
+t.test(g2, mu=mu, alternative="greater", conf.level=0.95)  
+%% 対立仮説(H1): mean(g2)>=mu (alternative="greater")  
+
+##### 一標本両側検定 (標本の平均がある値であることの検定)
+t.test(g2, mu=mu, alternative="two.sided", conf.level=0.95)  
+%% 仮説(H0): mean(g2)==mu (alternative="two.sided")  
+%% 平均が同じである仮説を棄却できるorできない
+
+##### 二標本片側検定 (二標本の一方の平均が他方以上or以下であることの検定)
+t.test(g2, g1, paired=FALSE, var.equal=FALSE, alternative="greater", conf.level=0.95)  
+%% ペアでない (paired=FALSE)  
+%% 分散は一致していない (var.equal=FALSE)  
+%% 帰無仮説(H0): g2==g1  
+%% 対立仮説(H1): g2>=g1 (alternative="greater")  
+%% 信頼度(1-有意水準)：95% (conf.level=0.95)  
+%% 有意水準(α): p < αの時にH_{0}を棄却  
+
+set.seed(0)  
+g1 <- rnorm(10,10,3)  
+g2 <- rnorm(12,15,4)  
+boxplot(g1,g2)  
+t.test(g2, g1, paired=FALSE, var.equal=FALSE, alternative="greater", conf.level=0.95)  
+%% 	Welch Two Sample t-test                      ## <== Method  
+%%  
+%% data:  g2 and g1  
+%% t = 2.0221, df = 15.999, p-value = 0.03011    ## <== t値、df:自由度、p値が0.05(5%)以下なので帰無仮説が棄却  
+%% alternative hypothesis: true difference in means is greater than 0  ## 対立仮説が支持された  
+%% 95 percent confidence interval:               ## <== 信頼度95%(有意水準5%)での信頼区間  
+%%  0.3777683       Inf  
+%% sample estimates:  
+%% mean of x mean of y   
+%%  13.84277  11.07677  
+names(out1)
+%% [1] "statistic"   "parameter"   "p.value"     "conf.int"    "estimate"   
+%% [6] "null.value"  "alternative" "method"      "data.name"  
+
+t.test(sample, mu=100, alternative="less")
+
+t.test(g2, g1, paired=FALSE,var.equal=TRUE, alternative="less")
+
+
 ### t信頼区間 (t confidence intervals)
 
 ### 信頼区間(confidence interval)
@@ -64,27 +108,20 @@ t_(.975,n_x+n_y-2)
 ((n_x-1)(S_x)^2+(n_y-1)(S_y)^2) / ((n_x-1)+(n_y-1))
 
 ### 2 Groups
-Gr1: n_x= 8, mn_x=132.86, S_x=15.34
+Gr1: n_x= 8, mn_x=132.86, S_x=15.34  
+Gr2: n_y=21, mn_y=127.44, S_y=18.23  
+sp <- (n_x-1)(S_x)^2 +(n_y-1)(S_y)^2  
+ns <- n_x+n_y-2  
+sp <- sqrt(sp/ns)  
+mn_x-mn_y +c(-1,1) * qt(0.975,ns) * sp*sqrt(1/n_x + 1/n_y)  
 
-Gr2: n_y=21, mn_y=127.44, S_y=18.23
+the sample pooled variance  
 
-sp <- (n_x-1)(S_x)^2 +(n_y-1)(S_y)^2
+sp <- sqrt( ((length(g1)-1)*var(g1)+(length(g2)-1)*var(g1)) / (length(g1)+length(g2)-2) )  
 
-ns <- n_x+n_y-2
-
-sp <- sqrt(sp/ns)
-
-mn_x-mn_y +c(-1,1) * qt(0.975,ns) * sp*sqrt(1/n_x + 1/n_y)
-
-the sample pooled variance
-
-sp <- sqrt( ((length(g1)-1)*var(g1)+(length(g2)-1)*var(g1)) / (length(g1)+length(g2)-2) )
-
-mean(g2)-mean(g1) + c(-1,1) * qt(.975,(length(g1)+length(g2)-2)) * sp*sqrt(1/length(g1)+1/length(g2))
-
-t.test(g2, g1, paired=FALSE,var.equal=TRUE)$conf    # ペアでない場合信頼区間
-
-t.test(g2, g1, paired=TRUE)$conf                    # ペアの場合信頼区間
+mean(g2)-mean(g1) + c(-1,1) * qt(.975,(length(g1)+length(g2)-2)) * sp*sqrt(1/length(g1)+1/length(g2))  
+t.test(g2, g1, paired=FALSE,var.equal=TRUE)$conf    # ペアでない場合信頼区間  
+t.test(g2, g1, paired=TRUE)$conf                    # ペアの場合信頼区間  
 
 
 #### 2 Groups
