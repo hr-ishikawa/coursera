@@ -1,0 +1,10 @@
+#### August 28, 2019
+
+The interactive plot created with Plotly
+
+```{r echo=FALSE, message=FALSE}
+library(plotly)
+
+plot_ly(mtcars, x=~wt, y=~cyl,  z=~mpg,
+        type="scatter3d", color=~mpg)
+````
