@@ -1,0 +1,12 @@
+#### August 28, 2019
+If you find a description "へそ" in this map, that means "Navel".<br/>
+Beacause, the longitude 135 is the origin of JST.
+
+```{r echo=FALSE}
+library(leaflet)
+
+my_map <-  leaflet() %>% 
+    addTiles() %>%
+    addMarkers(lat=35, lng=135, popup="The Navel of Japan")
+my_map
+````
