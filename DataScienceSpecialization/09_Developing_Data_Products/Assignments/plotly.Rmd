@@ -1,10 +1,18 @@
-#### August 28, 2019
+---
+title: "Plotly Presentation"
+author: "Ishikawa"
+date: "2019/8/30"
+output: ioslides_presentation
+---
+## *Plotly Presentation*
 
-The interactive plot created with Plotly
+The interactive Presentation with Plotly  
+August 30th, 2019  
 
+Data; mpg, wt, cyl from mtcars dataset  
 ```{r echo=FALSE, message=FALSE}
 library(plotly)
 
-plot_ly(mtcars, x=~wt, y=~cyl,  z=~mpg,
-        type="scatter3d", color=~mpg)
+plot_ly(mtcars, x=~wt, y=~cyl, z=~mpg, type="scatter3d", color=~mpg)
+
 ````
