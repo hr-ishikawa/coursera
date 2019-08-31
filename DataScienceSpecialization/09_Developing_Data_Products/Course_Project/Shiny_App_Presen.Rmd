@@ -1,0 +1,41 @@
+---
+title: "Shiny App Presentation"
+author: "Ishikawa"
+date: "2019/8/30"
+output: ioslides_presentation
+---
+
+## ***Easy!***
+
+*Just Set mu and sd by slide bar!*
+
+<div align="center">
+<img src="./Shiny_App_Presen_files/sidebar.PNG">
+</div>
+
+## ***Colorful!***
+
+*You can set color by pulldown list!*
+
+<div align="center">
+<img src="./Shiny_App_Presen_files/colorful.PNG">
+</div>
+
+## ***The Normal Distribution !***
+
+*click hear!*
+
+https://hr-ishikawa.shinyapps.io/shinyapp/  <== *Click!*
+<div align="center">
+<img src="./Shiny_App_Presen_files/ND.PNG">
+</div>
+
+## ***Free!***
+
+Thanks to:
+
+![](./Shiny_App_Presen_files/R_logo.PNG)
+https://www.r-project.org/
+
+![](./Shiny_App_Presen_files/RStudio_logo.PNG)
+https://www.rstudio.com/
