@@ -23,11 +23,11 @@ output: ioslides_presentation
 
 ## ***The Normal Distribution !***
 
-*click hear!*
-
 https://hr-ishikawa.shinyapps.io/shinyapp/  <== *Click!*
+
 <div align="center">
-<img src="./Shiny_App_Presen_files/ND.PNG">
+<img src="./Shiny_App_Presen_files/ND.PNG"><br/>
+The using function: "density <- dnorm(x, mu, sd)".
 </div>
 
 ## ***Free!***
@@ -39,3 +39,6 @@ https://www.r-project.org/
 
 ![](./Shiny_App_Presen_files/RStudio_logo.PNG)
 https://www.rstudio.com/
+
+***and the contributors!***
+
