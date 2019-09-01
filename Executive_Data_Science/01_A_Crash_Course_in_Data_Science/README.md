@@ -137,5 +137,24 @@ Good ease of use and design are a discipline unto themselves. Since your data sc
 
 On the other hand, having well commented code and version control should be standard practice for data scientists. Well commented code is easy to return to for new employees or the original coder returning to the project after a long hiatus. Version control is similar good practice. With version control, data scientists will be able to return to any checked in version of the project. The comments are useful for documenting the evolution of the project as well. Tools such as git and github make version control easy and are in the standard toolkit of data scientists.
 
+## The four secrets of a successful data science experiment
+
+Defining success is a crucial part of managing a data science experiment. Of course, success is often context specific. However, some aspects of success are general enough to merit discussion. My list of hallmarks of success includes:
+
+1. New knowledge is created.
+2. Decisions or policies are made based on the outcome of the experiment.
+3. A report, presentation or app with impact is created.
+4. It is learned that the data can't answer the question being asked of it.
+---
+1. 新しい知識が作成されます。
+2. 決定またはポリシーは、実験の結果に基づいて行われます。
+3. 影響のあるレポート、プレゼンテーション、アプリが作成されます。
+4. データは、求められている質問に答えることができないことがわかります。
+---
+
+Some more negative outcomes include: decisions being made that disregard clear evidence from the data, equivocal results that do not shed light in one direction or another, uncertainty prevents new knowledge from being created.
+
+
+
 
 
