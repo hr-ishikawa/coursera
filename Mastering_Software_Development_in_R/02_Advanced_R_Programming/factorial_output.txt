@@ -1,0 +1,11 @@
+ library(microbenchmark)
+ microbenchmark(Factorial_loop(  12),
++                Factorial_reduce(12),
++                Factorial_func(  12),
++                Factorial_mem(   12))
+Unit nanoseconds
+                 expr   min    lq     mean median    uq    max neval
+   Factorial_loop(12)   821  1231  1346.02   1231  1641   5334   100
+ Factorial_reduce(12) 56202 57023 60456.59  57843 58664 172299   100
+   Factorial_func(12)  4513  4923  5472.98   5333  5334  23794   100
+    Factorial_mem(12)  5333  5744  6383.69   6154  6154  25024   100
