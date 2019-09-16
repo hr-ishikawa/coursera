@@ -133,29 +133,29 @@ Multiple R-Squaredの値によって示されるのは 重相関係数の二乗(
     - 例はここにあります
 
 #### Example: Variance Inflation Factors
-data(swiss)
-fit  <- lm(Fertility ~ Agriculture, data=swiss)
-fit2 <- lm(Fertility ~ Agriculture + Examination, data=swiss)
-fit3 <- lm(Fertility ~ Agriculture + Examination + Education, data=swiss)
-  calculate ratios of variances for Agriculture coef for fit2 and fit3 w.r.t fit1
-c(summary(fit2)$cov.unscaled[2,2], summary(fit3)$cov.unscaled[2,2]) / a - 1
-[1] 0.8915757 1.0891588
+data(swiss)  
+fit  <- lm(Fertility ~ Agriculture, data=swiss)  
+fit2 <- lm(Fertility ~ Agriculture + Examination, data=swiss)  
+fit3 <- lm(Fertility ~ Agriculture + Examination + Education, data=swiss)  
+  calculate ratios of variances for Agriculture coef for fit2 and fit3 w.r.t fit1  
+c(summary(fit2)$cov.unscaled[2,2], summary(fit3)$cov.unscaled[2,2]) / a - 1  
+[1] 0.8915757 1.0891588  
 
 #### anova()
-anova(fit1, fit3, fit5)
-Analysis of Variance Table
+anova(fit1, fit3, fit5)  
+Analysis of Variance Table  
 
-Model 1: Fertility ~ Agriculture
-Model 2: Fertility ~ Agriculture + Examination + Education
-Model 3: Fertility ~ Agriculture + Examination + Education + Catholic + 
-    Infant.Mortality
-  Res.Df  RSS Df Sum of Sq    F  Pr(>F)    
-1     45 6283                              
-2     43 3181  2      3102 30.2 8.6e-09 ***
-3     41 2105  2      1076 10.5 0.00021 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
-
+Model 1: Fertility ~ Agriculture  
+Model 2: Fertility ~ Agriculture + Examination + Education  
+Model 3: Fertility ~ Agriculture + Examination + Education + Catholic +   
+    Infant.Mortality  
+  Res.Df  RSS Df Sum of Sq    F  Pr(>F)      
+1     45 6283                                
+2     43 3181  2      3102 30.2 8.6e-09 ***  
+3     41 2105  2      1076 10.5 0.00021 ***  
+---  
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’  
+  
 分散分析表  
 Res.Df = モデルの残差自由度  
 RSS = (Residual Sum of Squares)モデルの残差平方和、適合度  
@@ -174,50 +174,50 @@ fit <- lm(mpg ~ cyl + disp + hp + drat + wt, data = mtcars)
 step(fit, k=log(nrow(mtcars)))  
 
 k = ペナルティとして使われる自由度数の倍数．  
-k=2 AIC 法
-k=log(n) はしばしば BIC (Bayes Information Criterion)や SBC と呼ばれる
+k=2 AIC 法  
+k=log(n) はしばしば BIC (Bayes Information Criterion)や SBC と呼ばれる  
 BICは通常、AICよりも小さいモデルを選択する  
 
-Start:  AIC=73.75
-mpg ~ cyl + disp + hp + drat + wt
-       Df Sum of Sq    RSS    AIC
+Start:  AIC=73.75  
+mpg ~ cyl + disp + hp + drat + wt  
+       Df Sum of Sq    RSS    AIC  
 - drat  1     3.018 170.44 70.854  <== この項目を削除した場合
 - disp  1     6.949 174.38 71.584
 - cyl   1    15.411 182.84 73.100
-<none>              167.43 73.748  <== 何も削除しない場合
+- <none>            167.43 73.748  <== 何も削除しない場合
 - hp    1    21.066 188.49 74.075
 - wt    1    77.476 244.90 82.453
 
-Step:  AIC=70.85                   <== 最も影響の少ない(AICの小さい)変数を削除したモデル
-mpg ~ cyl + disp + hp + wt
-       Df Sum of Sq    RSS    AIC
+Step:  AIC=70.85                   <== 最も影響の少ない(AICの小さい)変数を削除したモデル  
+mpg ~ cyl + disp + hp + wt  
+       Df Sum of Sq    RSS    AIC  
 - disp  1     6.176 176.62 68.528
 - hp    1    18.048 188.49 70.609
-<none>              170.44 70.854
+- <none>            170.44 70.854
 - cyl   1    24.546 194.99 71.694
 - wt    1    90.925 261.37 81.069
 
-<<略>>
+<<略>>  
 
-Call:
-lm(formula = mpg ~ cyl + wt, data = mtcars)
+Call:  
+lm(formula = mpg ~ cyl + wt, data = mtcars)  
 
-Coefficients:
+Coefficients:  
 (Intercept)          cyl           wt  
      39.686       -1.508       -3.191  
 
 
 #### VIF (Variance Inflation Factors)
-library(car)
-mdl <- lm(Fertility ~ . , data = swiss)
-vif(mdl) ## calculate the variance inflation factors
+library(car)  
+mdl <- lm(Fertility ~ . , data = swiss)  
+vif(mdl) ## calculate the variance inflation factors  
      Agriculture      Examination        Education         Catholic Infant.Mortality  
         2.284129         3.675420         2.774943         1.937160         1.107542  
-他の変数との相関。　数値が大きいと他の変数と相関している割合が大きい。
-ただし、除外すると、相関するリグレッサの係数推定値にバイアスがかかる場合がある。
+他の変数との相関。　数値が大きいと他の変数と相関している割合が大きい。  
+ただし、除外すると、相関するリグレッサの係数推定値にバイアスがかかる場合がある。  
 因子分析や主成分分析などの方法で、回帰分析を同等の非相関セットに変換できるが、
-変換されたリグレッサを使用すると、解釈が困難になる場合がある。
-VIF統計量は一般的に10以下であれば多重共線性がないとされる。理想値は2以下
+変換されたリグレッサを使用すると、解釈が困難になる場合がある。  
+VIF統計量は一般的に10以下であれば多重共線性がないとされる。理想値は2以下  
 
 ### 残差 (Residuals)
 Yi = β0 + β*xi + εi  
