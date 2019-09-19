@@ -59,3 +59,14 @@ str_split(x, ' |\\.') %>% unlist()%>% tibble(A=.) %>% mutate(B=lead(A),C=lead(A,
 10 She   is     a      pretty     1
 11 There is     a      pen        1
 12 This  is     a      pen        1
+
+library(tidyverse)
+
+df <- tibble( flg=c('AA','AA','AA','AA','AA','AA','AA','AA',
+                    'BB','BB','BB','BB','BB','BB','BB','BB' ),
+              x  =c(  1,   2,   2,   3,   3,   4,   4,   5,
+                      1,   1,   2,   2,   2,   3,   4,   5  ) )
+
+ggplot(df,aes(x=x,fill=flg))+geom_bar(position='identity',width=1,color='black',alpha=0.4)
+ggplot(df,aes(x=x,fill=flg))+geom_histogram(position='identity',bins=5,color='black',alpha=0.4)
+
