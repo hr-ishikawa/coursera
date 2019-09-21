@@ -4,7 +4,7 @@
 
 世界中で、人々は電子メール、ソーシャルネットワーキング、バンキング、その他のさまざまな活動のためにモバイルデバイスに費やす時間を増やしています。しかし、モバイルデバイスでの入力は深刻な苦痛になります。この絶頂期の企業パートナーであるSwiftKeyは、モバイルデバイスでの入力を容易にするスマートキーボードを構築します。彼らのスマートキーボードの基盤の1つは、予測テキストモデルです。誰かがタイプするとき：
 
-私はに行きました
+I went to the
 
 キーボードには、次の単語が何であるかについて3つのオプションがあります。たとえば、3つの単語は、ジム、店舗、レストランです。このキャップストーンでは、SwiftKeyで使用されるような予測テキストモデルの理解と構築に取り組みます。
 
@@ -28,7 +28,7 @@
 -CRANタスクビュー：自然言語処理（http://cran.r-project.org/web/views/NaturalLanguageProcessing.html）
 -スタンフォード自然言語処理コースの動画（https://www.youtube.com/user/OpenCourseOnline/search?query=NLP）およびスライド（https://web.stanford.edu/~jurafsky/NLPCourseraSlides.html）
 
-## Syllbus 概要, シラバス
+## Syllbus (シラバス、概要)
 ### コースタイトル
 Data Science Specialization SwiftKey Capstone
 
