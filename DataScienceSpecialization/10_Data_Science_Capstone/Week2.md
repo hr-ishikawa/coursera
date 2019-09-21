@@ -111,3 +111,23 @@ The goal of this exercise is to create a product to highlight the prediction alg
 
 1. Consider the size of the predictive model you have developed. You may have to sacrifice some accuracy to have a fast enough/small enough model to load into Shiny.
 
+## Week 6
+
+## Task 7 - Slide Deck
+
+The goal of this exercise is to "pitch" your data product to your boss or an investor. The slide deck is constrained to be 5 slides or less and should: (1) explain how your model works, (2) describe its predictive performance quantitatively and (3) show off the app and how it works.
+
+#### Tasks to accomplish
+
+Create a slide deck promoting your product. Write 5 slides using RStudio Presenter explaining your product and why it is awesome!
+
+#### Questions to consider
+
+How can you briefly explain how your predictive model works?
+How can you succinctly quantitatively summarize the performance of your prediction algorithm?
+How can you show the user how the product works?
+Tips, tricks, and hints
+
+The Rstudio presentation information is available here (https://support.rstudio.com/hc/en-us/articles/200486468-Authoring-R-Presentations).
+
+
