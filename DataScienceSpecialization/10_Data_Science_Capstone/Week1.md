@@ -96,7 +96,7 @@ In this capstone we will be applying data science in the area of natural languag
 
 This is the training data to get you started that will be the basis for most of the capstone. You must download the data from the Coursera site and not from external websites to start.
 
-= Capstone Dataset (https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip)
+- Capstone Dataset (https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip)
 
 Your original exploration of the data and modeling steps will be performed on this data set. Later in the capstone, if you find additional data sets that may be useful for building your model you may use them.
 
