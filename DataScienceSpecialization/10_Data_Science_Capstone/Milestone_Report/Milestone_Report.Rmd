@@ -1,0 +1,251 @@
+---
+title: "Milestone Report"
+author: "Hiroo Ishikawa"
+date: "2019/9/18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = 'C:/Users/ishi/Documents/RWK/coursera/final/en_US/')
+knitr::opts_chunk$set(echo=TRUE)
+knitr::opts_chunk$set(message=FALSE)
+knitr::opts_chunk$set(warning=FALSE)
+```
+
+### Introduction
+
+The objects of this course is; 
+1. Analyze a corpus of text documents to discover the structure in the data and how words are put together
+2. Build and sampling from a predictive text model
+3. Build a predictive text product
+
+
+### Overview of this Reort
+
+1. Read the texts from the Internet blogs, news and twitter. 
+2. Separate from the each text into words.
+3. Exploratory analysis to build basic n-gram model, that is predicting the next word based on the previous 1, 2, or 3 words.
+4. build basic n-gram model of Data sets
+
+### 1. Read Data sets
+
+For this analysis, the data texts are from blogs, news and twitter.
+The Selected language is English. Use following three fiiles.
+
+- en_US.blogs.txt
+- en_US.news.txt
+- en_US.twitter.txt
+
+As test, read a few lines of each data set.
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+read_lines('en_US.blogs.txt',   skip=0, n_max=2L)
+read_lines('en_US.news.txt',    skip=0, n_max=2L)
+read_lines('en_US.twitter.txt', skip=0, n_max=2L)
+```
+
+In the files, there are some sentense in a line and lines of words separated by space.
+
+
+### 2. Separate into words.
+
+Read whole of the files.
+
+```{r}
+blog <- read_lines('en_US.blogs.txt',   skip=0)
+news <- read_lines('en_US.news.txt',    skip=0)
+twtr <- read_lines('en_US.twitter.txt', skip=0)
+```
+
+check out summary statistics of the dataset.
+
+Number of lines;
+```{r}
+blog %>% length()
+news %>% length()
+twtr %>% length()
+```
+
+Length of each lines;
+```{r}
+line_len <- blog %>% str_length() %>% tibble(src='blogs',  length=.)
+line_len <- news %>% str_length() %>% tibble(src='news',   length=.) %>% bind_rows(line_len, .)
+line_len <- twtr %>% str_length() %>% tibble(src='twitter',length=.) %>% bind_rows(line_len, .)
+line_len %>% group_by(src) %>% summarise(mean=round(mean(length),1),max=max(length))
+```
+
+Number of each lines;
+```{r}
+words <- blog %>% str_split(' ') %>% map_int(length) %>% tibble(src='blogs'  ,words=.)
+words <- news %>% str_split(' ') %>% map_int(length) %>% tibble(src='news'   ,words=.) %>% bind_rows(words, .)
+words <- twtr %>% str_split(' ') %>% map_int(length) %>% tibble(src='twitter',words=.) %>% bind_rows(words, .)
+words %>% group_by(src) %>% summarise(mean=round(mean(words),1), max=max(words))
+```
+
+Draw histograms length of each texts and Number of words.
+```{r fig.width=6, fig.height=3}
+ggplot(line_len,aes(x=length,fill=src))+ggtitle('Histogram for Length of texts (Omitt long tail)')+
+    geom_histogram(position='identity',binwidth=6,color='black',alpha=0.4)+xlim(c(0,300))
+
+ggplot(words,aes(x=words,fill=src))+ggtitle('Histogram for Number of words in texts (Omitt long tail)')+
+    geom_histogram(position='identity',binwidth=1,color='black',alpha=0.4)+xlim(c(0,60))
+```
+
+### 3. Exploratory analysis to Build n-gram
+
+
+#### Exploratory Points
+
+1) Indicate End of Sentence - The last word don't have following word.
+2) Get next Word - use function lead()
+3) filter the word to The first letter is alfabet - Other than alphabet are have no sence.
+4) n-gram top N pattern - Leave the top N and throw away others, to model to make the model smaller, and too Many candidates are ineffective.
+
+First, Use a part of data set to repeat trying in short turn around.
+
+#### 1 Word n-gram
+
+```{r}
+x <- blog %>% sample(10000)
+
+# W1: n-gram word, NW: Next word of n-gram, N: Number of occurrences
+n1gram <- str_c(x, ' [[EOS]]' ) %>% str_split(' ') %>% unlist()%>% 
+    tibble(W1=.) %>% filter(str_detect(str_sub(W1,1,1),'[a-zA-Z]')) %>%
+    mutate(NW=lead(W1)) %>% filter(W1!='[[EOS]]'&NW!='[[EOS]]') %>% 
+    arrange(W1,NW) %>% group_by(W1,NW) %>% summarize(N=n()) %>% filter(N>1) %>% 
+    group_by(W1) %>% top_n(3,N) %>% ungroup()
+
+n1gram %>% head()
+n1gram %>% tail()
+```
+
+Test the model
+
+Input: 'I'
+```{r}
+n1gram %>% filter(W1=='I') %>% arrange(desc(N))
+```
+Input: 'was'
+```{r}
+n1gram %>% filter(W1=='was') %>% arrange(desc(N))
+```
+
+It's looks like done well.
+
+#### 2 Word n-gram
+
+```{r}
+# W1,2: n-gram word, NW: Next word of n-gram, N: Number of occurrences
+n2gram <- str_c(x, ' [[EOS]]' ) %>% str_split(' ') %>% unlist()%>% 
+    tibble(W1=.) %>% filter(str_detect(str_sub(W1,1,1),'[a-zA-Z]')) %>%
+    mutate(W2=lead(W1),NW=lead(W1,2)) %>% 
+    filter(W1!='[[EOS]]'&W2!='[[EOS]]'&NW!='[[EOS]]') %>% 
+    arrange(W1,W2,NW) %>% group_by(W1,W2,NW) %>% summarize(N=n()) %>% filter(N>1) %>% 
+    group_by(W1,W2) %>% top_n(3,N) %>% ungroup()
+
+n2gram %>% head()
+n2gram %>% tail()
+```
+Test the model
+
+Input: 'I was'
+```{r}
+n2gram %>% filter(W1=='I',W2=='was') %>% arrange(desc(N))
+```
+
+Input: 'was a'
+```{r}
+n2gram %>% filter(W1=='was',W2=='a') %>% arrange(desc(N))
+```
+
+
+#### 3 Word n-gram
+
+```{r}
+# W1,2,3: n-gram word, NW: Next word of n-gram, N: Number of occurrences
+n3gram <- str_c(x, ' [[EOS]]' ) %>% str_split(' ') %>% unlist()%>% 
+    tibble(W1=.) %>% filter(str_detect(str_sub(W1,1,1),'[a-zA-Z]')) %>%
+    mutate(W2=lead(W1),W3=lead(W1,2),NW=lead(W1,3)) %>% 
+    filter(W1!='[[EOS]]'&W2!='[[EOS]]'&W3!='[[EOS]]'&NW!='[[EOS]]') %>% 
+    arrange(W1,W2,W3,NW) %>% group_by(W1,W2,W3,NW) %>% summarize(N=n()) %>% filter(N>1) %>% 
+    group_by(W1,W2,W3) %>% top_n(3,N) %>% ungroup()
+
+n3gram %>% head()
+n3gram %>% tail()
+```
+Test the model
+
+Input: 'I was a'
+```{r}
+n3gram %>% filter(W1=='I',W2=='was',W3=='a') %>% arrange(desc(N))
+```
+Input: 'was a bit'
+```{r}
+n3gram %>% filter(W1=='was',W2=='a',W3=='bit') %>% arrange(desc(N))
+```
+
+### 4. Build Models 
+
+Build the models from data sets.
+
+#### 1 Word n-gram
+
+```{r}
+x <- c(blog,news,twtr)
+
+# W1: n-gram word, NW: Next word of n-gram, N: Number of occurrences
+n1gram <- str_c(x, ' [[EOS]]' ) %>% str_split(' ') %>% unlist()%>% 
+    tibble(W1=.) %>% filter(str_detect(str_sub(W1,1,1),'[a-zA-Z]')) %>%
+    mutate(NW=lead(W1)) %>% filter(W1!='[[EOS]]'&NW!='[[EOS]]') %>% 
+    arrange(W1,NW) %>% group_by(W1,NW) %>% summarize(N=n()) %>% filter(N>1) %>% 
+    group_by(W1) %>% top_n(3,N) %>% ungroup()
+
+n1gram %>% nrow()
+n1gram %>% head()
+n1gram %>% tail()
+```
+
+#### 2 Word n-gram
+
+```{r}
+# W1,2: n-gram word, NW: Next word of n-gram, N: Number of occurrences
+n2gram <- str_c(x, ' [[EOS]]' ) %>% str_split(' ') %>% unlist()%>% 
+    tibble(W1=.) %>% filter(str_detect(str_sub(W1,1,1),'[a-zA-Z]')) %>%
+    mutate(W2=lead(W1),NW=lead(W1,2)) %>% 
+    filter(W1!='[[EOS]]'&W2!='[[EOS]]'&NW!='[[EOS]]') %>% 
+    arrange(W1,W2,NW) %>% group_by(W1,W2,NW) %>% summarize(N=n()) %>% filter(N>1) %>% 
+    group_by(W1,W2) %>% top_n(3,N) %>% ungroup()
+
+n2gram %>% nrow()
+n2gram %>% head()
+n2gram %>% tail()
+```
+
+#### 3 Word n-gram
+
+```{r}
+# W1,2,3: n-gram word, NW: Next word of n-gram, N: Number of occurrences
+n3gram <- str_c(x, ' [[EOS]]' ) %>% str_split(' ') %>% unlist()%>% 
+    tibble(W1=.) %>% filter(str_detect(str_sub(W1,1,1),'[a-zA-Z]')) %>%
+    mutate(W2=lead(W1),W3=lead(W1,2),NW=lead(W1,3)) %>% 
+    filter(W1!='[[EOS]]'&W2!='[[EOS]]'&W3!='[[EOS]]'&NW!='[[EOS]]') %>% 
+    arrange(W1,W2,W3,NW) %>% group_by(W1,W2,W3,NW) %>% summarize(N=n()) %>% filter(N>1) %>% 
+    group_by(W1,W2,W3) %>% top_n(3,N) %>% ungroup()
+
+n2gram %>% nrow()
+n3gram %>% head()
+n3gram %>% tail()
+```
+
+### Conclusion
+
+The n-gram models works well. But very large. Next step, try shrink the size of models. 
+
+
+
+
+
