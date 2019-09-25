@@ -1,3 +1,46 @@
+Katz-backoffモデル
+Good-Turing スムージング
+
+Ngram言語モデルメモ
+https://jetbead.hatenablog.com/entry/20111031/1320078059
+未出現事象の出現確率
+https://www.slideshare.net/hirsoshnakagawa3/smoothing1-40918238
+言語モデル
+http://chasen.org/~daiti-m/paper/naist-dlec2004-lmodel.pdf
+
+
+tkn <- function(lines){
+    tibble(line=lines) %>%
+    unnest_tokens(word, line) %>%
+    filter(str_detect(str_sub(word,1,1),'[a-zA-Z]')) %>%
+    anti_join(stop_words, by='word')
+}
+
+#tkns <- bind_rows(tkn(blog),tkn(news),tkn(twtr)) %>% 
+tkns <- bind_rows(tkn(blog)) %>% 
+    group_by(word) %>% summarise(n=n()) %>% filter(n>1) %>%
+    distinct()
+
+trigram <-  tkns %>% 
+    mutate(trigram=str_c(word,' ',lead(word),' ',lead(word,2)),nextword=lead(word,3)) %>%
+    group_by(trigram,nextword) %>% summarise(n=n()) %>%
+    arrange(desc(n))
+
+trigram %>% nrow()
+trigram %>% head()
+trigram %>% tail()
+
+Q1 <- "When you breathe, I want to be the air for you. I'll be there for you, I'd live and I'd"
+x <- tkn(Q1) %>% pull(word) %>% str_c(collapse=' ')
+x
+
+trigram %>% filter(trigram==x)
+trigram %>% filter(str_detect(trigram,' air live'))
+trigram %>% filter(str_detect(trigram,' live$'))
+trigram %>% filter(str_detect(trigram,"i'd"))
+
+
+
 x <- c('I have a pen.', 'This is a pen.', 'She is a pretty girl.', 'There is a pen in my pocket.')
 
 str_split(x, ' |\\.') %>% unlist()%>% tibble(A=.) %>% mutate(B=lead(A)) %>% 
