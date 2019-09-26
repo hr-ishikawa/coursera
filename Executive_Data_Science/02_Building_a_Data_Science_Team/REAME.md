@@ -36,6 +36,45 @@ https://docs.google.com/presentation/d/1zcvzzkAZun_K8FkvKGGxboJnHomXgFonJraoJfjX
 Related reading:  
 http://blog.udacity.com/2014/11/data-science-job-skills.html
 
+```
+1.
+Ability to implement machine learning methods
+Ability to design experiments
+XXAbility to manage data security
+Ability to pull data from a database
+XXManagement experience
+XXAbility to build a database
+
+2.
+Management experience
+##Ability to scale computation
+Machine learning
+##Ability to manage data resources
+##Ability to build data products
+
+3.XXX
+PhD
+MBA
+##Experience in data engineering
+Database administration
+## Experience in management
+##Experience in data science
+Machine learning
+Knowledge of the business
+
+4.XXX
+Data scientist
+Data engineer
+XX??Data manager
+
+5.XXX
+Computer engineering
+Biostatistics
+?? Computer science
+Statistics
+Machine learning
+Quantitative sciences
+```
 
 
 ## Assembling The Team
