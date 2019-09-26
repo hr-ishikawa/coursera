@@ -15,6 +15,11 @@ Related reading:
 http://simplystatistics.org/
 http://101.datascience.community/2014/07/08/data-scientist-vs-data-engineer/
 
+データサイエンスチームの重要なポジション
+1. データエンジニア　データベースを構築する人、または 人々が分析するためにそのデータベースからデータを引き出す
+2. データサイエンティストは、データベースからデータを取得する可能性があります。 その後、彼らはそれを分析し、実験を行い、視覚化し、 これらの結果をデータサイエンスマネージャーに伝えます。
+3. データサイエンスマネージャー すべてのユーザーが相互にやり取りし、 彼らが物事を動かし続けること。 また、データサイエンスチームを募集して構築します。 そして、彼らはまた、組織の上級管理職と連携します。 組織全体で同じレベルにいる共同編集者と同様に、 すべての情報を確実に入手できるようにします。
+
 
 ## Qualifications and Skills
 
@@ -30,6 +35,7 @@ https://docs.google.com/presentation/d/1zcvzzkAZun_K8FkvKGGxboJnHomXgFonJraoJfjX
 
 Related reading:  
 http://blog.udacity.com/2014/11/data-science-job-skills.html
+
 
 
 ## Assembling The Team
