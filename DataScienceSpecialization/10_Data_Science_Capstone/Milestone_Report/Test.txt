@@ -1,3 +1,8 @@
+R predict next word
+Predict Next Word - RPubs
+http://www.rpubs.com/chosengmong/Final_Capstone_Project
+
+
 Katz-backoffモデル
 Good-Turing スムージング
 
@@ -8,13 +13,77 @@ https://www.slideshare.net/hirsoshnakagawa3/smoothing1-40918238
 言語モデル
 http://chasen.org/~daiti-m/paper/naist-dlec2004-lmodel.pdf
 
+Rのtext2vecで次の単語を予測する
+https://codeday.me/jp/qa/20190821/1494469.html
+単語予測アルゴリズム
+https://codeday.me/jp/qa/20190220/270194.html
 
+install.packages("hash")
+library(hash)
+h <- hash()
+h['banana'] <- "banana"
+h
+h[['banana']] # [1] "banana"
+
+install.packages("openssl")
+library(openssl)
+sha256("banana") # [1] "b493d48364afe44d11c0165cf470a4164d1e2609911ef998be868d46ade3de4e"
+
+3.3 N-gram モデルのスムージング
+ただし，N-gramモデルにおいてはゼロ頻度問題という
+問題が存在する．これは、出現頻度により N-gram 確
+率を推定すると，学習用データセット中に出現しない単語
+組の確率値を 0 としてしまうという問題である．これを
+解決するために，線形補間法 というスムージング手法
+を用いる．線形補間法は，N-gram 確率 P(wn|w
+n−1
+n−N+1)
+を低次の M-gram(M < N) の確率値と線形に補間する
+方法である．N = 2（バイグラム）の場合は，N-gram
+確率は次のようになる．
+P(wn|wn−1)=λP(wn|wn−1)+(1 − λ)P(wn) (2)
+ここで，λ は補間係数であり，経験的に λ = 0.7 と設定す
+る．また，N = 3（トライグラム）の場合には，N-gram
+確率を次のように書きなおすことができる．
+P(wn|wn−2wn−1) = λ3P(wn|wn−2wn−1)
++ λ2P(wn|wn−1)
++ λ1P(wn) (3)
+ここで，λ3, λ2, λ1 は，それぞれトライグラム，バイグラ
+ム，ユニグラムに対する補間係数であり，∑iλi = 1 と
+なるように設定される．これらの補間係数に関しては，
+経験的に λ3 = 0.5, λ2 = 0.3, λ1 = 0.2 と設定する．以
+降，スムージング手法についてはこれらの補間係数を用
+いることとする．
+
+
+精度予測　データの中からランダムに抽出
+
+
+install.packages('tidytext')
+library(tidytext)
+
+lines <- c('I have a pen.', 'This is a pen.', 'She is a pretty girl.', 'There is a pen in my pocket.')
 tkn <- function(lines){
     tibble(line=lines) %>%
     unnest_tokens(word, line) %>%
     filter(str_detect(str_sub(word,1,1),'[a-zA-Z]')) %>%
     anti_join(stop_words, by='word')
 }
+tkn(lines) %>% group_by(word) %>% summarise(n=n())
+# A tibble: 4 x 2
+  word       n
+  <chr>  <int>
+1 girl       1
+2 pen        3
+3 pocket     1
+4 pretty     1
+
+tkn3 <- function(lines){
+    tibble(line=lines) %>%
+    unnest_tokens(word, line, token='ngrams', n=3)
+}
+tkn3(lines)
+
 
 #tkns <- bind_rows(tkn(blog),tkn(news),tkn(twtr)) %>% 
 tkns <- bind_rows(tkn(blog)) %>% 
