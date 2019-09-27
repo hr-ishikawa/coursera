@@ -36,50 +36,42 @@ https://docs.google.com/presentation/d/1zcvzzkAZun_K8FkvKGGxboJnHomXgFonJraoJfjX
 Related reading:  
 http://blog.udacity.com/2014/11/data-science-job-skills.html
 
-```
-1.
-Ability to implement machine learning methods
-Ability to design experiments
-XXAbility to manage data security
-Ability to pull data from a database
-XXManagement experience
-XXAbility to build a database
-
-2.
-Management experience
-##Ability to scale computation
-Machine learning
-##Ability to manage data resources
-##Ability to build data products
-
-3.XXX
-PhD
-MBA
-##Experience in data engineering
-Database administration
-## Experience in management
-##Experience in data science
-Machine learning
-Knowledge of the business
-
-4.XXX
-Data scientist
-Data engineer
-XX??Data manager
-
-5.XXX
-Computer engineering
-Biostatistics
-?? Computer science
-Statistics
-Machine learning
-Quantitative sciences
-```
-
 
 ## Assembling The Team
 
+Lecture materials
+Where to find the data team?
+
+https://docs.google.com/presentation/d/1_lrS0HnFA9obg8Q8nirhsjfyMGBf1klEP_Wa1p27BBs/edit?usp=sharing
+
+Interviewing for data science
+
+https://docs.google.com/presentation/d/1srI6OXFp2lHtMBSxw7qBpKl3J9Buv9IGrbnKfxzaMl4/edit?usp=sharing
+
+Related reading
+http://www.quora.com/How-does-Airbnb-hire-data-scientists
+http://qz.com/378228/google-is-over-those-ridiculous-brainteasers-but-some-employees-didnt-get-the-memo/
+
+
 ## Management Strategies
+
+Lecture materials  
+Onboarding the data science team
+
+https://docs.google.com/presentation/d/1Mp9zRMm-OfIPwm6jMX6dcDcW7TjAEZmQBpSnTaLoaRc/edit?usp=sharing
+
+Managing the data science team
+
+https://docs.google.com/presentation/d/1gIEgb20y-D9CBBXDR-XCZj9KooOWRKnQoFDXdlBHT4M/edit?usp=sharing
+
+Evaluating success
+
+https://docs.google.com/presentation/d/1NKsHqQyynJyB6CAofz3aZlZGJQQaWtp4Cx8AMFU2F68/edit?usp=sharing
+
+Related Reading
+https://hbr.org/2013/09/nate-silver-on-finding-a-mentor-teaching-yourself-statistics-and-not-settling-in-your-career/
+https://hbr.org/2013/03/know-the-difference-between-yo/
+
 
 ## Working with other teams
 
