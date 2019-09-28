@@ -208,23 +208,6 @@ http://simplystatistics.org/2013/10/08/the-care-and-feeding-of-the-biostatistici
 http://simplystatistics.org/2013/10/09/the-care-and-feeding-of-your-scientist-collaborator/
 http://simplystatistics.org/2015/03/17/data-science-done-well-looks-easy-and-that-is-a-big-problem-for-data-scientists/
 
-#### Common Internal Difficulties
-
-Code of conduct
-- Have a policy
-- Open communication
-- Quick, impartial, enforcement
-
-Inter-meeting slowdowns
-- Identify core issues
-- Increase interaction
-- Evaluate motivation
-
-Frustration
-- Remember to motivate
-- Positive reinforcement
-- Impartial feedback
-
 #### Common Interaction Difficulties
 
 Lack of interaction
@@ -242,7 +225,32 @@ Lack of understanding
 - Presentations to the organization
 - Advertising the data team
 
+#### Common Internal Difficulties
+
+Code of conduct
+- Have a policy
+- Open communication
+- Quick, impartial, enforcement
+
+Inter-meeting slowdowns
+- Identify core issues
+- Increase interaction
+- Evaluate motivation
+
+Frustration
+- Remember to motivate
+- Positive reinforcement
+- Impartial feedback
 
 
 ## Wrap-Up
+
+Lecture Materials
+Course Wrap-up
+
+https://docs.google.com/presentation/d/1NYPONB9ibxmkkFIxVNExe_LjMPnM5dYd0LulnyWjkKM/edit?usp=sharing
+
+Related Reading
+https://www.coursera.org/specializations/executive-data-science
+https://www.coursera.org/specializations/jhudatascience
 
