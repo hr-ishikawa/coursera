@@ -18,14 +18,14 @@ More specifically, you will need to
 - Download the data on all storms in the Atlantic basin from 1988–2015 (extended best tracks) tidy the dataset into “long” format. Data cleaning should include: (1) add a column for storm_id that combines storm name and year (the same storm name can be used in different years, so this will allow for the unique identification of a storm); (2) format the longitude to ensure it is numeric and has negative values for locations in the Western hemisphere (this will make it easier to use the longitude for mapping); (3) format and combine columns describing the date and time to create a single variable with the date-time of each observation; and (4) convert the data to a “long” format, with separate rows for each of the three wind speeds for wind radii (34 knots, 50 knots, and 64 knots). For example, the cleaned dataset for a single observation point for Hurricane Katrina may look like this after the data is tidied:
 
 ```{r}
-%##       storm_id                date latitude longitude wind_speed  ne  nw
-%## 1 Katrina-2005 2005-08-29 12:00:00     29.5     -89.6         34 200 100
-%## 2 Katrina-2005 2005-08-29 12:00:00     29.5     -89.6         50 120  75
-%## 3 Katrina-2005 2005-08-29 12:00:00     29.5     -89.6         64  90  60
-%##    se  sw
-%## 1 200 150
-%## 2 120  75
-%## 3  90  60
+##       storm_id                date latitude longitude wind_speed  ne  nw
+## 1 Katrina-2005 2005-08-29 12:00:00     29.5     -89.6         34 200 100
+## 2 Katrina-2005 2005-08-29 12:00:00     29.5     -89.6         50 120  75
+## 3 Katrina-2005 2005-08-29 12:00:00     29.5     -89.6         64  90  60
+##    se  sw
+## 1 200 150
+## 2 120  75
+## 3  90  60
 ```
 - Subset to the specific hurricane that you will be mapping (Hurricane Ike) and to a single observation time for that hurricane
 - Write the code for a geom named “geom_hurricane” that plots a wind radii for a single hurricane observation. For example, if this geom is added to a ggplot object with a dataset named katrina with the data shown above for a single observation point of the storm, you would get the following plot:
