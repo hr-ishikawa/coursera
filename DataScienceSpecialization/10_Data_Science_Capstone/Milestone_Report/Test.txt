@@ -84,6 +84,43 @@ tkn3 <- function(lines){
 }
 tkn3(lines)
 
+#-----------------------------
+tkn <- function(lines){
+    tibble(line=lines) %>%
+    mutate(line=str_c(lines,' e_o_s')) %>%
+    unnest_tokens(word, line) %>%
+    filter(str_detect(str_sub(word,1,1),'[a-zA-Z]')) %>%
+    anti_join(stop_words, by='word')
+}
+words <- tkn(lines)
+words
+# A tibble: 10 x 1
+   word  
+ 1 pen   
+ 2 e_o_s 
+ 3 pen   
+ 4 e_o_s 
+ 5 pretty
+ 6 girl  
+ 7 e_o_s 
+ 8 pen   
+ 9 pocket
+10 e_o_s 
+
+words %>% filter(!(word %in% c('girl','pocket')))
+# A tibble: 8 x 1
+  word  
+1 pen   
+2 e_o_s 
+3 pen   
+4 e_o_s 
+5 pretty
+6 e_o_s 
+7 pen   
+8 e_o_s 
+
+
+#-----------------------------
 
 #tkns <- bind_rows(tkn(blog),tkn(news),tkn(twtr)) %>% 
 tkns <- bind_rows(tkn(blog)) %>% 
