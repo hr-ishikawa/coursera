@@ -1,7 +1,7 @@
 この演習の目標は、作成した予測アルゴリズムを強調する製品を作成し、他のユーザーがアクセスできるインターフェイスを提供することです。このプロジェクトでは、次のものを提出する必要があります。
 
 1. テキストボックス入力のフレーズ（複数の単語）を入力として受け取り、次の単語の予測を出力する光沢のあるアプリ。
-2. R Studio Presenter（https://support.rstudio.com/hc/en-us/articles/200486468-Authoring-R-Presentations）で作成された5枚以下のスライドで構成されるスライドデッキ。上司や投資家にプレゼンテーションをしていました。
+2. R Studio Presenter (https://support.rstudio.com/hc/en-us/articles/200486468-Authoring-R-Presentations) で作成された5枚以下のスライドで構成されるスライドデッキ。上司や投資家にプレゼンテーションをしていました。
 
 ## レビュー基準
 
