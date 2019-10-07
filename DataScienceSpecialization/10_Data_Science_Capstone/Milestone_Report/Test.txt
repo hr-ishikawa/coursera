@@ -6,6 +6,28 @@ http://www.rpubs.com/chosengmong/Final_Capstone_Project
 Katz-backoffモデル
 Good-Turing スムージング
 
+■言語モデル入門 （第二版） - SlideShare
+https://www.slideshare.net/yoshinarifujinuma/ss-40451841
+◆Kneser-neyスムージング：overview
+ •実験的に一番良いスムージング 
+ •いくつかバリエーションがある
+  –Interpolated Kneser-ney (Kneser & Ney 1995) 
+ •今回はこっちを説明
+  –Modified Kneser-ney(Chen & Goodman 1999) •アイディアは： –直前の単語の種類数を重視
+◆Kneser-neyスムージング：例 
+ •Bigram言語モデルを想定 
+ •I want to go to Toyama Fransisco
+  –Fransiscoは頻度が高いが、ほぼSanの後に続く 
+ •スムージング：unigramの頻度
+  –P(Toyama Fransisco) ≒ P(Fransisco)
+  –P(Toyama Fransisco)が高くなってしまう！ 
+ •Kneser-neyのアイディア： –P_continuation: 単語wは直前の単語の種類は 豊富か？
+◆パープレキシティ
+
+■[翻訳] text2vec vignette: text2vecパッケージによるテキスト分析
+https://qiita.com/nakamichi/items/1bf2ee393cb407d9fb74
+
+
 Ngram言語モデルメモ
 https://jetbead.hatenablog.com/entry/20111031/1320078059
 未出現事象の出現確率
@@ -218,4 +240,183 @@ df <- tibble( flg=c('AA','AA','AA','AA','AA','AA','AA','AA',
 
 ggplot(df,aes(x=x,fill=flg))+geom_bar(position='identity',width=1,color='black',alpha=0.4)
 ggplot(df,aes(x=x,fill=flg))+geom_histogram(position='identity',bins=5,color='black',alpha=0.4)
+
+### ===========================
+
+library(tidyverse)
+library(tidytext)
+
+dir <- 'coursera/final/en_US/'
+
+n_max <- 10000L
+blog <- read_lines(str_c(dir,'en_US.blogs.txt'  ),locale=locale(encoding='utf8'),skip=0,n_max=n_max) # n_max=Inf
+news <- read_lines(str_c(dir,'en_US.news.txt'   ),locale=locale(encoding='utf8'),skip=0,n_max=n_max)
+twtr <- read_lines(str_c(dir,'en_US.twitter.txt'),locale=locale(encoding='utf8'),skip=0,n_max=n_max)
+
+#blog <- read_lines(str_c(dir,'en_US.blogs.txt'  ),skip=0,n_max=n_max) # n_max=Inf
+#news <- read_lines(str_c(dir,'en_US.news.txt'   ),skip=0,n_max=n_max)
+#twtr <- read_lines(str_c(dir,'en_US.twitter.txt'),skip=0,n_max=n_max)
+
+all <- c(blog,news,twtr)
+all %>% first() # [1] "In the years thereafter, most of the Oil fields and platforms were named after pagan “gods”."
+all %>% last()  # [1] "as of right now at this sec pass me by!"
+
+#----------------
+# Strategy
+#  Shrink the Data size
+#
+# Procesedure
+# 1) Indicate End of Sentence - The last word don't have following word.
+# 2) aggregate the character code to ASCII - some characters are utf8
+# 3) filter the word start with alphabets - Other than alphabets are have no sense.
+# 4) drop words that appear less frequency - threshold is less equal twice
+# 5) n-gram top N pattern - Leave only the top and throw away others, to model to make the model smaller, and too Many candidates are ineffective.
+
+
+E_O_S <- 'ze_o_Sz' # end of sentence
+n_drop <- 2        # Number of frequent words to drop 
+
+rawToUtf <- function(r){str_conv(as.raw(r),encoding='utf8'))}
+
+words <- tibble(line=str_c(all,' ',E_O_S)) %>%
+         unnest_tokens(word,line) %>%                   # Tokenize
+         mutate(word=str_replace(word,rawToUtf(c('0xe2','0x80','0x99')),'\''),
+                word=str_replace(word,rawToUtf(c('0xc3','0xa9')),       'e' ) ) %>%
+         filter(str_detect(word,'^[a-zA-Z]')) %>%
+         anti_join(stop_words) %>%
+         mutate(word=str_replace(word,'\\\'s$','')) %>% # nrow:[1] 386709
+         group_by(word) %>% summarise(n=n()) %>% 
+         filter(n>n_drop) %>% ungroup()                 # nrow:[1] 16835
+
+words %>% nrow()
+words %>% head(15)
+words %>% tail(15)
+
+#----------------------
+# create ngram
+# First, try trigram. If not match fall back to low gram.
+
+
+
+words %>% arrange(word) %>% head(15)
+words %>% arrange(word) %>% tail(15)
+
+## str_detect(c('AA','1A','&A','bA',' A','-A','_A','.A'),'^[a-zA-Z]')
+
+table(words$word) %>% as.integer() %>% summary()
+Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+1.00     1.00     2.00     8.44     4.00 30000.00 
+table(words$word) %>% as.integer() %>% map_lgl(function(x){x==1}) %>% sum() # [1] 22489
+table(words$word) %>% as.integer() %>% map_lgl(function(x){x>2})  %>% sum() # [1] 16835
+
+### utf8
+
+charToRaw('\'') # [1] 27
+charToRaw('’')  # [1] 81 66
+charToRaw(iconv('’', from='CP932', to='utf-8')) # [1] e2 80 99
+charToRaw(iconv('’', from='CP932', to='ascii')) # [1] 4e 41 <- [1] NA
+
+CTR <- function(str){str_c(charToRaw(str),collapse='-')}
+CTR('AA') # [1] "41-41"
+tibble(line=str_c(all,' ',E_O_S)) %>% unnest_tokens(word,line) %>%
+filter(str_detect(word,'’')) %>% mutate(word=map_chr(word,CTR))
+#word                               
+#1 74-68-65-79-e2-80-99-72-65         
+#2 63-61-6e-e2-80-99-74               
+
+tibble(line=str_c(all,' ',E_O_S)) %>% unnest_tokens(word,line) %>%
+filter(str_detect(word,'’'))
+#word      
+#1 they’re   
+#2 can’t 
+
+ 
+tibble(line=str_c(all,' ',E_O_S)) %>% unnest_tokens(word,line) %>%　filter(str_detect(word,'’')) %>% nrow() # [1] 4934
+
+words %>% mutate(word=str_replace(word,'’','')) %>% filter(str_detect(word,'’')) ## A tibble: 0 x 1
+words %>% mutate(word=str_replace(word,'’','')) %>% filter(str_detect(word,'can\'t')) %>% nrow()
+
+words %>% mutate(word=str_replace(word,'’','\'')) %>% filter(str_detect(word,'’')) ## A tibble: 0 x 1
+words %>% mutate(word=str_replace(word,'’','\'')) %>% filter(str_detect(word,'\'')) ## # A tibble: 17,842 x 1
+words %>% mutate(word=str_replace(word,'’','\'')) %>% filter(str_detect(word,'can\'t')) %>% nrow()
+
+
+###----------------------
+> TestData <- c("Karada-Good", "カラダニ、いいもの", "111-111-1111",
++               "Name:からだに、いいもの", "統計")
+> str_conv(string = TestData, encoding = "ISO-8859-1")
+[1] "Karada-Good"                                                                
+[2] "\u0083J\u0083\u0089\u0083_\u0083j\u0081A\u0082¢\u0082¢\u0082à\u0082Ì"   
+[3] "111-111-1111"                                                               
+[4] "Name:\u0082©\u0082ç\u0082¾\u0082É\u0081A\u0082¢\u0082¢\u0082à\u0082Ì"
+[5] "\u0093\u009d\u008cv"                                                        
+
+◆文字列をエンコーディングする
+x <- rawToChar(as.raw(177))
+charToRaw(x) # [1] b1
+x # [1] "ｱ"
+## [1] "ｱ"
+str_conv(x, "ISO-8859-2") # Polish "a with ogonek" # [1] "ą"
+## [1] "<U+0105>"
+str_conv(x, "ISO-8859-1") # Plus-minus # [1] "±"
+## [1] "±"
+
+rawToChar(c(as.raw(65),as.raw(65))) # [1] "AA"
+
+not_ascii <- function(s){str_length(s)!=(charToRaw(s)%>%length())}
+CTR <- function(str){str_c(charToRaw(str),collapse='-')}
+xxx <- words %>% mutate(not_ascii=map_lgl(word,not_ascii)) %>% 
+                 filter(not_ascii==TRUE) %>% pull(word)
+xxx %>% map_chr(CTR)
+#  [1] "61-69-6e-e2-80-99-74"                      "61-6c-7a-68-65-69-6d-65-72-e2-80-99-73"   
+# ...
+# [15] "62-72-69-74-61-69-6e-e2-80-99-73"          "63-61-66-c3-a9"                
+ 
+xxx[16] # [1] "café"
+xxx[16] %>% charToRaw() # [1] 63 61 66 c3 a9
+
+xxx[16] %>% str_conv(encoding='ISO-8859-1') # [1] "cafÃ©"
+xxx[16] %>% str_conv(encoding='ISO-8859-1') %>% charToRaw() # [1] 63 61 66 c3 83 c2 a9
+
+charToRaw(xxx[16]) # [1] 63 61 66 c3 a9
+charToRaw(str_sub(xxx[16],4,4)) # [1] c3 a9
+str_conv(xxx[16],encoding='utf8') # [1] "café"
+str_conv(xxx[16],encoding='utf8') %>% charToRaw() # [1] 63 61 66 c3 a9
+str_conv('é',encoding='utf8') # [1] "e"
+str_conv('é',encoding='utf8') %>% charToRaw # [1] 65
+str_conv('é',encoding='utf8') %>% charToRaw # [1] 65
+str_conv(str_sub(xxx[16],4,4),encoding='utf8') %>% charToRaw() # [1] c3 a9
+
+str_detect(xxx[16],'é') # [1] FALSE
+
+str_detect(xxx[16],'c') # [1] TRUE
+str_detect(xxx[16],'e') # [1] FALSE
+str_detect(xxx[16],'é') # [1] FALSE
+str_detect(xxx[16],'\uc3a9') # [1] FALSE
+str_detect(xxx[16],str_sub(xxx[16],4,4)) # [1] TRUE
+
+rawToChar(c(as.raw(0xc3),as.raw(0xa9))) # [1] "ﾃｩ"
+charToRaw(rawToChar(c(as.raw(0xc3),as.raw(0xa9)))) # [1] c3 a9
+charToRaw(str_sub(xxx[16],4,4)) %>% rawToChar() # [1] "ﾃｩ"
+charToRaw(str_sub(xxx[16],4,4)) %>% rawToChar() %>% str_conv(encoding='utf8') # [1] "é"
+
+charToRaw(rawToChar(as.raw(c(0xc3,0xa9)))) %>% str() # raw [1:2] c3 a9
+charToRaw(str_sub(xxx[16],4,4)) %>% str()            # raw [1:2] c3 a9
+
+charToRaw(rawToChar(as.raw(c(0xc3,0xa9)))) %>% rawToChar() %>% str_conv(encoding='utf8') # [1] "é"
+charToRaw(str_sub(xxx[16],4,4))            %>% rawToChar() %>% str_conv(encoding='utf8') # [1] "é"
+
+as.raw(c(0xc3,0xa9)) %>% rawToChar() %>% str_conv(encoding='utf8') # [1] "é"
+as.raw(c(0xc3,0xa9)) %>% str_conv(encoding='utf8') # [1] "é"
+c('0xc3','0xa9') %>% as.raw() %>% str_conv(encoding='utf8') # [1] "é"
+str_conv(as.raw(c(0xc3,0xa9)),encoding='utf8') # [1] "é"
+
+rawToUtf <- function(r){str_conv(as.raw(r),encoding='utf8')}
+rawToUtf(c('0xe2','0x80','0x99')) # [1] "’"
+rawToUtf(c('0xc3','0xa9')) # [1] "é"
+
+
+str_detect(xxx[ 1],str_conv(as.raw(c(0xe2,0x80,0x99)),encoding='utf8')) # [1] TRUE
+str_detect(xxx[16],str_conv(as.raw(c(0xc3,0xa9)),encoding='utf8'))      # [1] TRUE
+
 
