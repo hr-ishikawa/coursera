@@ -275,19 +275,28 @@ all %>% last()  # [1] "as of right now at this sec pass me by!"
 
 E_O_S <- 'ze_o_Sz' # end of sentence
 n_drop <- 2        # Number of frequent words to drop 
+rawToUtf <- function(r){str_conv(as.raw(r),encoding='utf8')}
 
-rawToUtf <- function(r){str_conv(as.raw(r),encoding='utf8'))}
-
-words <- tibble(line=str_c(all,' ',E_O_S)) %>%
-         unnest_tokens(word,line) %>%                   # Tokenize
-         mutate(word=str_replace(word,rawToUtf(c('0xe2','0x80','0x99')),'\''),
-                word=str_replace(word,rawToUtf(c('0xc3','0xa9')),       'e' ) ) %>%
-         filter(str_detect(word,'^[a-zA-Z]')) %>%
-         anti_join(stop_words) %>%
-         mutate(word=str_replace(word,'\\\'s$','')) %>% # nrow:[1] 386709
-         group_by(word) %>% summarise(n=n()) %>% 
-         filter(n>n_drop) %>% ungroup()                 # nrow:[1] 16835
-
+parse_in <- function(lines){ 
+    tibble(line=str_c(all,' ',E_O_S)) %>%          # [1] 4,269,678
+    unnest_tokens(word,line) %>%                   # Tokenize  [1] "106,671,684"
+    filter(str_detect(word,'^[a-zA-Z]')) %>%       # [1] 104,746,113
+    mutate(word=str_replace_all(word,rawToUtf(c('0xe2','0x80','0x8e')),''  ),
+           word=str_replace_all(word,rawToUtf(c('0xef','0xbb','0xbf')),''  ),
+           word=str_replace_all(word,rawToUtf(c('0xe2','0x80','0x98')),'\''),
+           word=str_replace_all(word,rawToUtf(c('0xe2','0x80','0x99')),'\''),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa9')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xd0','0xb5')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xd0','0xbe')),       'o' ),
+           word=str_replace_all(word,rawToUtf(c('0xd1','0x83')),       'y' ),
+           word=str_replace_all(word,rawToUtf(c('0xd1','0x95')),       's' ),
+           word=str_replace_all(word,rawToUtf(c('0xd1','0x96')),       'i' ) ) %>%
+    anti_join(stop_words) %>%                      # [1] 45,430,449
+    mutate(word=str_replace(word,'\\\'s$','')) %>% #
+    group_by(word) %>% mutate(n=n()) %>% ungroup() %>% 
+    filter(n>n_drop) %>%  
+    select(-n)
+}
 words %>% nrow()
 words %>% head(15)
 words %>% tail(15)
