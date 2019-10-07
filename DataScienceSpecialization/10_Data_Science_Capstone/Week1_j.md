@@ -24,9 +24,9 @@ I went to the
 
 以下に、この野心的なプロジェクトに取り組む際に開始するのに適したリソースをいくつか紹介します。
 
--Rのテキストマイニングインフラストラクチャ（http://www.jstatsoft.org/v25/i05/）
--CRANタスクビュー：自然言語処理（http://cran.r-project.org/web/views/NaturalLanguageProcessing.html）
--スタンフォード自然言語処理コースの動画（https://www.youtube.com/user/OpenCourseOnline/search?query=NLP）およびスライド（https://web.stanford.edu/~jurafsky/NLPCourseraSlides.html）
+- Rのテキストマイニングインフラストラクチャ(http://www.jstatsoft.org/v25/i05/)  
+- CRANタスクビュー：自然言語処理(http://cran.r-project.org/web/views/NaturalLanguageProcessing.html)  
+- スタンフォード自然言語処理コースの動画(https://www.youtube.com/user/OpenCourseOnline/search?query=NLP) およびスライド(https://web.stanford.edu/~jurafsky/NLPCourseraSlides.html)  
 
 ## Syllbus (シラバス、概要)
 ### コースタイトル
