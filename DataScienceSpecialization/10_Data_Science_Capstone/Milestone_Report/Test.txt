@@ -472,3 +472,69 @@ str_detect(xxx[ 1],str_conv(as.raw(c(0xe2,0x80,0x99)),encoding='utf8')) # [1] TR
 str_detect(xxx[16],str_conv(as.raw(c(0xc3,0xa9)),encoding='utf8'))      # [1] TRUE
 
 
+
+#================================
+shiny
+【R Shiny】fileInputメソッドでファイルアップロード
+https://www.randpy.tokyo/entry/shiny_16
+
+ui.R
+shinyUI(
+  fluidPage(
+    sidebarLayout(
+      sidebarPanel(
+        #=====================================
+        fileInput("file",                     #<= 変数名
+                  "Choose CSV File",          #<=
+                  accept = c("text/csv","text/comma-separated-values,text/plain",".csv")
+        #=====================================
+        ),
+        tags$hr(),
+        h2("プロットするデータを選択"),
+        htmlOutput("colname1"),
+        htmlOutput("colname2"),
+        actionButton("submit", "プロット")
+      ),
+      mainPanel(
+        tabsetPanel(type = "tabs",
+                    tabPanel("Table", tableOutput('table')),
+                    tabPanel("Plot", plotOutput("plot"))
+        )
+      )
+    )
+  )
+)
+
+server.R
+server = function(input, output, session) {
+  observeEvent(input$file, {
+    
+    #==============================================
+    csv_file = reactive(read.csv(input$file$datapath))
+    #==============================================
+    output$table = renderTable(csv_file())
+    
+    output$colname1 = renderUI({ 
+      selectInput("x", "x軸方向", colnames(csv_file()))
+    })
+    output$colname2 = renderUI({ 
+      selectInput("y", "y軸方向", colnames(csv_file()))
+    })
+  })
+  
+  observeEvent(input$submit, {
+    name = names(input$file)
+    csv_file = reactive(read.csv(input$file$datapath))
+    
+    x = csv_file()[input$x]
+    y = csv_file()[input$y]
+    
+    output$plot = renderPlot({
+      plot(x[,1], y[,1])
+    })
+  })
+}
+
+
+
+
