@@ -85,6 +85,13 @@ install.packages('tidytext')
 library(tidytext)
 
 lines <- c('I have a pen.', 'This is a pen.', 'She is a pretty girl.', 'There is a pen in my pocket.')
+all <- c('I have a pen.', 
+         'This is the 1st dog.',
+         'She is a pretty girl.',
+         'There is a pen in my pocket.',
+         'The quick brown fox jumps over the lazy dog.',
+         'I drew this dog picture with this pen')
+
 tkn <- function(lines){
     tibble(line=lines) %>%
     unnest_tokens(word, line) %>%
@@ -300,6 +307,38 @@ parse_in <- function(lines){
 words %>% nrow()
 words %>% head(15)
 words %>% tail(15)
+
+words <- tibble(line=str_c(all,' ',E_O_S)) %>%          # [1] 4,269,678
+    unnest_tokens(word,line) %>%                   # Tokenize  [1] "106,671,684"
+    filter(str_detect(word,'^[a-zA-Z]')) %>%       # [1] 104,746,113
+    anti_join(stop_words) %>%                      # [1] 45,430,449
+    mutate(word=str_replace_all(word,rawToUtf(c('0xe2','0x80','0x8e')),''  ),
+           word=str_replace_all(word,rawToUtf(c('0xef','0xbb','0xbf')),''  ),
+           word=str_replace_all(word,rawToUtf(c('0xe2','0x80','0x98')),'\''),
+           word=str_replace_all(word,rawToUtf(c('0xe2','0x80','0x99')),'\''),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa0')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa1')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa4')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa7')),       'c' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa8')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa9')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xaa')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xad')),       'i' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xb1')),       'n' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xb3')),       'o' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xb6')),       'o' ),
+           word=str_replace_all(word,rawToUtf(c('0xd0','0xb5')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xd0','0xbe')),       'o' ),
+           word=str_replace_all(word,rawToUtf(c('0xd1','0x83')),       'y' ),
+           word=str_replace_all(word,rawToUtf(c('0xd1','0x95')),       's' ),
+           word=str_replace_all(word,rawToUtf(c('0xd1','0x96')),       'i' ) ) %>%
+    mutate(word=str_replace(word,'\\\'s$','')) %>% #
+    group_by(word) %>% mutate(n=n()) %>% ungroup() %>% 
+    mutate(word=if_else(n>n_drop,word,E_O_S)) %>%       # [1] 104,746,113
+    mutate(next_word=lead(word)) %>%
+    filter((word!=E_O_S)&(next_word!=E_O_S)) %>%
+    select(-n,-next_word)
+
 
 #----------------------
 # create ngram
