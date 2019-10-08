@@ -316,26 +316,43 @@ words <- tibble(line=str_c(all,' ',E_O_S)) %>%          # [1] 4,269,678
            word=str_replace_all(word,rawToUtf(c('0xef','0xbb','0xbf')),''  ),
            word=str_replace_all(word,rawToUtf(c('0xe2','0x80','0x98')),'\''),
            word=str_replace_all(word,rawToUtf(c('0xe2','0x80','0x99')),'\''),
+           word=str_replace_all(word,rawToUtf(c('0xc2','0xad')),       ''  ),
            word=str_replace_all(word,rawToUtf(c('0xc3','0xa0')),       'a' ),
            word=str_replace_all(word,rawToUtf(c('0xc3','0xa1')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa2')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa3')),       'a' ),
            word=str_replace_all(word,rawToUtf(c('0xc3','0xa4')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa5')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa6')),       'a' ),
            word=str_replace_all(word,rawToUtf(c('0xc3','0xa7')),       'c' ),
            word=str_replace_all(word,rawToUtf(c('0xc3','0xa8')),       'e' ),
            word=str_replace_all(word,rawToUtf(c('0xc3','0xa9')),       'e' ),
            word=str_replace_all(word,rawToUtf(c('0xc3','0xaa')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xab')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xac')),       'i' ),
            word=str_replace_all(word,rawToUtf(c('0xc3','0xad')),       'i' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xae')),       'i' ),
            word=str_replace_all(word,rawToUtf(c('0xc3','0xaf')),       'i' ),
            word=str_replace_all(word,rawToUtf(c('0xc3','0xb1')),       'n' ),
            word=str_replace_all(word,rawToUtf(c('0xc3','0xb3')),       'o' ),
            word=str_replace_all(word,rawToUtf(c('0xc3','0xb4')),       'o' ),
            word=str_replace_all(word,rawToUtf(c('0xc3','0xb6')),       'o' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xba')),       'u' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xbb')),       'u' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xbc')),       'u' ),
            word=str_replace_all(word,rawToUtf(c('0xc4','0x81')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc4','0x87')),       'c' ),
            word=str_replace_all(word,rawToUtf(c('0xc4','0xab')),       'i' ),
+           word=str_replace_all(word,rawToUtf(c('0xd0','0xb0')),       'a' ),
            word=str_replace_all(word,rawToUtf(c('0xd0','0xb5')),       'e' ),
            word=str_replace_all(word,rawToUtf(c('0xd0','0xbe')),       'o' ),
            word=str_replace_all(word,rawToUtf(c('0xd1','0x83')),       'y' ),
            word=str_replace_all(word,rawToUtf(c('0xd1','0x95')),       's' ),
-           word=str_replace_all(word,rawToUtf(c('0xd1','0x96')),       'i' ) ) %>%
+           word=str_replace_all(word,rawToUtf(c('0xd1','0x96')),       'i' ), 
+           word=str_replace_all(word,rawToUtf(c('0xe1','0xb9','0x87')),'n' ),
+           word=str_replace_all(word,rawToUtf(c('0xe1','0xb9','0x9b')),'r' ),
+           word=str_replace_all(word,rawToUtf(c('0xe1','0xb9','0xa3')),'s' ),
+           word=str_replace_all(word,rawToUtf(c('0xe1','0xb9','0xad')),'t' )) %>%
     mutate(word=str_replace(word,'\\\'s$','')) %>% #
     group_by(word) %>% mutate(n=n()) %>% ungroup() %>% 
     mutate(word=if_else(n>n_drop,word,E_O_S)) %>%       # [1] 104,746,113
@@ -343,7 +360,84 @@ words <- tibble(line=str_c(all,' ',E_O_S)) %>%          # [1] 4,269,678
     filter((word!=E_O_S)&(next_word!=E_O_S)) %>%
     select(-n,-next_word)
 
+cat('## nrow(words)',comma(nrow(words)),'\n')  ## nrow(words) 44,847,988
 
+not_ascii <- function(s){str_length(s)!=(charToRaw(s)%>%length())}
+CTR  <- function(str){str_c(charToRaw(str),collapse='-')}
+CTRN <- function(str){str_split(str,'')[[1]]%>%map_chr(CTR)}
+
+xxz <- words %>%
+       group_by(word) %>% summarise(n=n()) %>% 
+       mutate(not_ascii=map_lgl(word,not_ascii)) %>% 
+       filter(not_ascii==TRUE) %>% arrange(desc(n))
+xxz %>% head(10)
+xxx <- xxz %>% pull(word) # %>% sort()
+xxx %>% length() #321
+x <- xxx[1];x;CTR(x);CTRN(x)
+x <- xxx[2];x;CTR(x);CTRN(x)
+x <- xxx[3];x;CTR(x);CTRN(x)
+
+x <- str_sub(xxx[2],6,6);x;CTR(x);CTRN(x)
+
+#----------------------------------
+# n-gram
+
+n_words <- table(words$word)
+
+system.time(  #  103.92       3.41     107.40 
+unigram <- 
+  words %>%
+    mutate(words    =word,
+           next_word=lead(word)) %>% 
+    select(-word) %>%
+    filter(!str_detect(words,    E_O_S) &
+           !str_detect(next_word,E_O_S)  ) %>%
+    group_by(words,next_word) %>% summarize(n=n()) %>% ungroup() %>%
+    group_by(words) %>% top_n(1,n) %>% ungroup() %>% mutate(n=n_words[next_word]) %>%
+    arrange(desc(n)) %>% distinct(words, .keep_all=T) %>%
+    select(-n)
+)
+cat('## nrow(unigram)',comma(nrow(unigram)),'\n')
+cat('## object.size(unigram)',comma(object.size(unigram)/1000000),'MB \n')
+unigram %>% head(10)
+
+system.time( #      1962.66      13.89    1976.69 
+bigram <- 
+  words %>%
+    mutate(words    =str_c(word,' ',lead(word)),
+           next_word=lead(word,2)) %>% 
+    select(-word) %>%
+    filter(!str_detect(words,    E_O_S) &
+           !str_detect(next_word,E_O_S)  ) %>%
+    group_by(words,next_word) %>% summarize(n=n()) %>% ungroup() %>%
+    group_by(words) %>% top_n(1,n) %>% ungroup() %>% mutate(n=n_words[next_word]) %>%
+    arrange(desc(n)) %>% distinct(words, .keep_all=T) %>%
+    select(-n)
+)
+cat('## nrow(bigram)',comma(nrow(bigram)),'\n')
+## nrow(bigram) 18,221,405 
+cat('## object.size(bigram)',comma(object.size(bigram)/1000000),'MB \n')
+## object.size(trigram) 3642.7 bytes MB 
+bigram %>% head(10)
+
+system.time(  #     5829.5      109.6     6052.4 
+trigram <- 
+  words %>%
+    mutate(words    =str_c(word,' ',lead(word),' ',lead(word,2)),
+           next_word=lead(word,3)) %>% 
+    select(-word) %>%
+    filter(!str_detect(words,    E_O_S) &
+           !str_detect(next_word,E_O_S)  ) %>%
+    group_by(words,next_word) %>% summarize(n=n()) %>% ungroup() %>%
+    group_by(words) %>% top_n(1,n) %>% ungroup() %>% mutate(n=n_words[next_word]) %>%
+    arrange(desc(n)) %>% distinct(words, .keep_all=T) %>%
+    select(-n)
+)
+cat('## nrow(trigram)',comma(nrow(trigram)),'\n')
+## nrow(trigram) 38,256,211 
+cat('## object.size(trigram)',comma(object.size(trigram)/1000000),'MB \n')
+## object.size(trigram) 3642.7 bytes MB 
+trigram %>% head(10)
 #----------------------
 # create ngram
 # First, try trigram. If not match fall back to low gram.
