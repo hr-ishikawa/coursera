@@ -11,16 +11,17 @@ https://www.slideshare.net/yoshinarifujinuma/ss-40451841
 ◆Kneser-neyスムージング：overview
  •実験的に一番良いスムージング 
  •いくつかバリエーションがある
-  –Interpolated Kneser-ney (Kneser & Ney 1995) 
+  – Interpolated Kneser-ney (Kneser & Ney 1995) 
  •今回はこっちを説明
-  –Modified Kneser-ney(Chen & Goodman 1999) •アイディアは： –直前の単語の種類数を重視
+  – Modified Kneser-ney(Chen & Goodman 1999) 
+ •アイディアは： –直前の単語の種類数を重視
 ◆Kneser-neyスムージング：例 
  •Bigram言語モデルを想定 
  •I want to go to Toyama Fransisco
-  –Fransiscoは頻度が高いが、ほぼSanの後に続く 
+  – Fransiscoは頻度が高いが、ほぼSanの後に続く 
  •スムージング：unigramの頻度
-  –P(Toyama Fransisco) ≒ P(Fransisco)
-  –P(Toyama Fransisco)が高くなってしまう！ 
+  – P(Toyama Fransisco) ≒ P(Fransisco)
+  – P(Toyama Fransisco)が高くなってしまう！ 
  •Kneser-neyのアイディア： –P_continuation: 単語wは直前の単語の種類は 豊富か？
 ◆パープレキシティ
 
