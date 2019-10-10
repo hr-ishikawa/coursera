@@ -573,7 +573,189 @@ str_detect(xxx[ 1],str_conv(as.raw(c(0xe2,0x80,0x99)),encoding='utf8')) # [1] TR
 str_detect(xxx[16],str_conv(as.raw(c(0xc3,0xa9)),encoding='utf8'))      # [1] TRUE
 
 
+#================================
+#================================
+#================================
+library(tidyverse)
+library(tidytext)
+library(scales)
 
+dir <- 'coursera/final/en_US/'
+
+n_max <- 20000L # n_max=Inf
+all <- c(read_lines(str_c(dir,'en_US.blogs.txt'  ),locale=locale(encoding='utf8'),skip=0,n_max=n_max),
+         read_lines(str_c(dir,'en_US.news.txt'   ),locale=locale(encoding='utf8'),skip=0,n_max=n_max),
+         read_lines(str_c(dir,'en_US.twitter.txt'),locale=locale(encoding='utf8'),skip=0,n_max=n_max) )
+
+cat('## length(all)=',comma(length(all)),', n_max=',comma(n_max),'\n',sep='')
+all %>% first() # [1] "In the years thereafter, most of the Oil fields and platforms were named after pagan “gods”."
+all %>% last()  # [1] "as of right now at this sec pass me by!"
+
+#----------------
+E_O_S  <- 'ze_o_sz' # end of sentence Mark
+rawToUtf <- function(r){str_conv(as.raw(r),encoding='utf8')}
+
+n_drop <- 2 # Number of frequent words to drop
+words <- tibble(line=str_c(all,' ',E_O_S)) %>%          # [1] 4,269,678
+    unnest_tokens(word,line) %>%                   # Tokenize  [1] "106,671,684"
+    filter(str_detect(word,'^[a-zA-Z]')) %>%       # [1] 104,746,113
+    anti_join(stop_words) %>%                      # [1] 45,430,449
+    mutate(word=str_replace_all(word,rawToUtf(c('0xe2','0x80','0x8e')),''  ),
+           word=str_replace_all(word,rawToUtf(c('0xef','0xbb','0xbf')),''  ),
+           word=str_replace_all(word,rawToUtf(c('0xe2','0x80','0x98')),'\''),
+           word=str_replace_all(word,rawToUtf(c('0xe2','0x80','0x99')),'\''),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa0')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa1')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa4')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa7')),       'c' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa8')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa9')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xaa')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xad')),       'i' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xaf')),       'i' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xb1')),       'n' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xb3')),       'o' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xb4')),       'o' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xb6')),       'o' ),
+           word=str_replace_all(word,rawToUtf(c('0xc4','0x81')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc4','0xab')),       'i' ),
+           word=str_replace_all(word,rawToUtf(c('0xd0','0xb5')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xd0','0xbe')),       'o' ),
+           word=str_replace_all(word,rawToUtf(c('0xd1','0x83')),       'y' ),
+           word=str_replace_all(word,rawToUtf(c('0xd1','0x95')),       's' ),
+           word=str_replace_all(word,rawToUtf(c('0xd1','0x96')),       'i' ) ) %>%
+    mutate(word=str_replace(word,'\\\'s$','')) %>% #
+    group_by(word) %>% mutate(n=n()) %>% ungroup() %>% 
+    mutate(word=if_else(n>n_drop,word,E_O_S)) %>%       # [1] 104,746,113
+    mutate(next_word=lead(word)) %>%
+    filter((word!=E_O_S)&(next_word!=E_O_S)) %>%
+    select(-n,-next_word)
+
+
+cat('## nrow=',comma(nrow(words)),', n_max=',comma(n_max),'\n',sep='')
+## nrow=271,093, n_max=10,000
+## nrow=578,103, n_max=20,000
+
+gc()
+
+#----------------------------------
+# n-gram
+nop <- function(df){df}
+n_words <- table(words$word)
+
+system.time(
+unigram <- 
+    words %>%
+    rename(next_word=word ) %>%
+    mutate(W1       =lag(next_word,default=E_O_S)) %>%
+    filter(!str_detect(next_word,E_O_S) &
+           !str_detect(W1,       E_O_S)  ) %>%
+    group_by(next_word,W1) %>% summarize(n=n()) %>% ungroup() %>%
+    group_by(W1) %>% top_n(1,n) %>% ungroup() %>%
+    arrange(W1,desc(n)) %>% distinct(W1, .keep_all=T) %>% 
+    nop()
+)
+cat('## nrow(unigram)=',comma(nrow(unigram)),', n_max=',comma(n_max),'\n',sep='')
+## nrow(unigram)=16,833, n_max=10,000
+## nrow(unigram)=25,033, n_max=20,000
+## nrow(unigram)=40,428, n_max=50,000
+cat('## object.size(unigram)=',comma(as.integer(object.size(unigram))/1e6),' MB \n',sep='')
+unigram %>% head(10)
+
+
+system.time(
+bigram <- 
+    words %>%
+    rename(next_word=word ) %>%
+    mutate(W1       =lag(next_word,  default=E_O_S),
+           W2       =lag(next_word,2,default=E_O_S) ) %>%
+    filter(!str_detect(next_word,E_O_S) &
+           !str_detect(W1,       E_O_S) & 
+           !str_detect(W2,       E_O_S)  ) %>%
+    group_by(next_word,W1,W2) %>% summarize(n=n()) %>% ungroup() %>% 
+    group_by(W1,W2) %>% top_n(1,n) %>% ungroup() %>% 
+    arrange(W1,W2,desc(n)) %>% distinct(W1,W2, .keep_all=T) %>% 
+    nop()
+)
+cat('## nrow(bigram)=',comma(nrow(bigram)),', n_max=',comma(n_max),'\n',sep='')
+## nrow(bigram)=249,373, n_max=10,000
+## nrow(bigram)=513,286, n_max=20,000
+## nrow(bigram)=1,264,744, n_max=50,000
+cat('## object.size(bigram)=',comma(as.integer(object.size(bigram))/1e6),' MB \n',sep='')
+bigram %>% head(10)
+
+#==============
+ngram <- 
+    bind_rows(bigram, unigram %>% mutate(W2='')) %>% 
+    arrange(W1,next_word,W2,desc(n)) %>% select(W2,W1,next_word,n)
+cat('## nrow(ngram)=',comma(nrow(ngram)),', n_max=',comma(n_max),'\n',sep='')
+## nrow(ngram)=1,305,172, n_max=50,000
+cat('## object.size(ngram)=',comma(as.integer(object.size(bigram))/1e6),' MB \n',sep='')
+## object.size(ngram)=43 MB 
+ngram
+ngram %>% tail(10)
+
+ngram <- ngram %>% arrange(W1,next_word,W2,desc(n)) %>% distinct(W1,next_word, .keep_all=T)
+cat('## nrow(ngram)=',comma(nrow(ngram)),', n_max=',comma(n_max),'\n',sep='')
+## nrow(ngram)=1,087,556, n_max=50,000
+cat('## object.size(ngram)=',comma(as.integer(object.size(bigram))/1e6),' MB \n',sep='')
+## object.size(ngram)=43 MB 
+ngram %>% tail(10)
+#==============
+
+
+system.time(
+trigram <- 
+    words %>%
+    rename(next_word=word ) %>%
+    mutate(W1       =lag(next_word,  default=E_O_S),
+           W2       =lag(next_word,2,default=E_O_S),
+           W3       =lag(next_word,3,default=E_O_S) ) %>%
+    filter(!str_detect(next_word,E_O_S) &
+           !str_detect(W1,       E_O_S) & 
+           !str_detect(W2,       E_O_S) &
+           !str_detect(W3,       E_O_S)  ) %>% 
+    group_by(next_word,W1,W2,W3) %>% summarize(n=n()) %>% ungroup() %>% 
+    group_by(W1,W2,W3) %>% top_n(1,n) %>% ungroup() %>% 
+    arrange(W1,W2,W3,desc(n)) %>% distinct(W1,W2,W3, .keep_all=T) %>% 
+    nop()
+)
+cat('## nrow(trigram)=',comma(nrow(trigram)),', n_max=',comma(n_max),'\n',sep='')
+## nrow(trigram)=1,504,770, n_max=50,000
+cat('## object.size(trigram)=',comma(as.integer(object.size(trigram))/1e6),' MB \n',sep='')
+trigram %>% head(10)
+
+ngram <- 
+    bind_rows(trigram, bigram %>% mutate(W3=''), unigram %>% mutate(W2='',W3='')) %>% 
+    arrange(W1,W2,next_word,W3) %>% select(W3,W2,W1,next_word,n)
+cat('## nrow(ngram)=',comma(nrow(ngram)),', n_max=',comma(n_max),'\n',sep='')
+## nrow(ngram)=2,809,942, n_max=50,000
+cat('## object.size(ngram)=',comma(as.integer(object.size(ngram))/1e6),' MB \n',sep='')
+## object.size(ngram)=111 MB
+ngram
+ngram %>% tail(20)
+
+
+ngram <- ngram %>% arrange(W1,W2,next_word,W3) %>% distinct(W1,W2,next_word, .keep_all=T)
+cat('## nrow(ngram)=',comma(nrow(ngram)),', n_max=',comma(n_max),'\n',sep='')
+## nrow(ngram)=1,532,057, n_max=50,000
+cat('## object.size(ngram)=',comma(as.integer(object.size(ngram))/1e6),' MB \n',sep='')
+## object.size(ngram)=64 MB
+ngram %>% tail(20)
+
+ngram <- ngram %>% arrange(W1,W2,next_word,W3) %>% distinct(W1,next_word,W3, .keep_all=T)
+cat('## nrow(ngram)=',comma(nrow(ngram)),', n_max=',comma(n_max),'\n',sep='')
+## nrow(ngram)=1,314,333, n_max=50,000
+cat('## object.size(ngram)=',comma(as.integer(object.size(ngram))/1e6),' MB \n',sep='')
+## object.size(ngram)=56 MB
+ngram %>% tail(20)
+
+
+
+
+
+#================================
+#================================
 #================================
 shiny
 【R Shiny】fileInputメソッドでファイルアップロード
