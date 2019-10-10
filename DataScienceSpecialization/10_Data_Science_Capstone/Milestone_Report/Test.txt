@@ -253,19 +253,25 @@ ggplot(df,aes(x=x,fill=flg))+geom_histogram(position='identity',bins=5,color='bl
 
 library(tidyverse)
 library(tidytext)
+library(scales)
 
 dir <- 'coursera/final/en_US/'
-
-n_max <- 10000L
-blog <- read_lines(str_c(dir,'en_US.blogs.txt'  ),locale=locale(encoding='utf8'),skip=0,n_max=n_max) # n_max=Inf
-news <- read_lines(str_c(dir,'en_US.news.txt'   ),locale=locale(encoding='utf8'),skip=0,n_max=n_max)
-twtr <- read_lines(str_c(dir,'en_US.twitter.txt'),locale=locale(encoding='utf8'),skip=0,n_max=n_max)
 
 #blog <- read_lines(str_c(dir,'en_US.blogs.txt'  ),skip=0,n_max=n_max) # n_max=Inf
 #news <- read_lines(str_c(dir,'en_US.news.txt'   ),skip=0,n_max=n_max)
 #twtr <- read_lines(str_c(dir,'en_US.twitter.txt'),skip=0,n_max=n_max)
+#all <- c(blog,news,twtr)
 
-all <- c(blog,news,twtr)
+library(tidyverse)
+library(tidytext)
+library(scales)
+
+n_max <- 10000L # n_max=Inf
+all <- c(read_lines(str_c(dir,'en_US.blogs.txt'  ),locale=locale(encoding='utf8'),skip=0,n_max=n_max),
+         read_lines(str_c(dir,'en_US.news.txt'   ),locale=locale(encoding='utf8'),skip=0,n_max=n_max),
+         read_lines(str_c(dir,'en_US.twitter.txt'),locale=locale(encoding='utf8'),skip=0,n_max=n_max) )
+
+cat('## length(all)=',comma(length(all)),', n_max=',comma(n_max),'\n',sep='')
 all %>% first() # [1] "In the years thereafter, most of the Oil fields and platforms were named after pagan “gods”."
 all %>% last()  # [1] "as of right now at this sec pass me by!"
 
@@ -280,18 +286,8 @@ all %>% last()  # [1] "as of right now at this sec pass me by!"
 # 4) drop words that appear less frequency - threshold is less equal twice
 # 5) n-gram top N pattern - Leave only the top and throw away others, to model to make the model smaller, and too Many candidates are ineffective.
 
-library(tidyverse)
-library(tidytext)
-library(scales)
 
-dir <- 'coursera/final/en_US/'
-n_max <- 10000L # n_max=Inf
-all <- c(read_lines(str_c(dir,'en_US.blogs.txt'  ),locale=locale(encoding='utf8'),skip=0,n_max=n_max),
-         read_lines(str_c(dir,'en_US.news.txt'   ),locale=locale(encoding='utf8'),skip=0,n_max=n_max),
-         read_lines(str_c(dir,'en_US.twitter.txt'),locale=locale(encoding='utf8'),skip=0,n_max=n_max) )
-
-
-E_O_S <- 'ze_o_Sz' # end of sentence
+E_O_S <- 'ze_o_sz' # end of sentence
 n_drop <- 2        # Number of frequent words to drop 
 rawToUtf <- function(r){str_conv(as.raw(r),encoding='utf8')}
 
