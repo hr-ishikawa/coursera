@@ -1,3 +1,10 @@
+## Presentation
+
+https://hr-ishikawa.github.io/coursera/DataScienceSpecialization/10_Data_Science_Capstone/Final_Project/Final_Project_Next_word_Shiny_App_Presen.html
+
+
+### Assinment
+
 The goal of this exercise is to create a product to highlight the prediction algorithm that you have built and to provide an interface that can be accessed by others. For this project you must submit:
 
 1. A Shiny app that takes as input a phrase (multiple words) in a text box input and outputs a prediction of the next word.
