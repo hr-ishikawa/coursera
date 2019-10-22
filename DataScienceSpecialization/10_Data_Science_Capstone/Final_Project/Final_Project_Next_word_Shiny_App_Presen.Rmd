@@ -1,0 +1,60 @@
+---
+title: "Final Project - Shiny App Presentation"
+author: "Ishikawa"
+date: "2019/10/20"
+output: ioslides_presentation
+---
+
+## 1. Objective
+
+#### Predict Next word form inputed text
+
+
+## 2. The Algolysm
+
+#### Predict Next word form inputed text
+
+
+## 3. The Prototype
+
+[Shiny_predict_next_word](tahttps://hr-ishikawa.shinyapps.io/Shiny_predict_next_word/)  <== *Click!*
+
+#### Instruction
+
+The initial panel
+<div align="center">
+<img src="./RStudio_Presen__next_word/NW1.PNG"><br/>
+</div>
+
+Input text into th input area
+<div align="center">
+<img src="./RStudio_Presen__next_word/NW2.PNG"><br/>
+</div>
+
+## 4. Sources
+
+### Data files
+
+- en_US.blogs.txt   -     899,288 Sentences
+- en_US.news.txt    -   1,010,242 Sentences
+- en_US.twitter.txt -   2,360,148 Sentences
+-           extraced 95,403,497 words
+
+### Source Code  
+
+[Create ngeam data set](https://hr-ishikawa.github.io/coursera/DataScienceSpecialization/10_Data_Science_Capstone/Final_Project/Text_Mining_final_project_Create_ngram.html)
+
+[Shiny_App.md](https://github.com/hr-ishikawa/coursera/blob/master/DataScienceSpecialization/10_Data_Science_Capstone/Final_Project/Shiny_App.md)
+
+## 5. Appendix
+
+Thanks to:
+
+![](./RStudio_Presen__next_word/R_logo.PNG)
+https://www.r-project.org/
+
+![](./RStudio_Presen__next_word/RStudio_logo.PNG)
+https://www.rstudio.com/
+
+***and the contributors!***
+
