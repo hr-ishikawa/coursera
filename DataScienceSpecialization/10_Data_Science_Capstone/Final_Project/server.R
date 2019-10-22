@@ -12,7 +12,6 @@ shinyServer(function(input, output, session) {
         tibble(line=lines) %>%        # [1] 4,269,678
             unnest_tokens(word,line) %>%
             filter(str_detect(word,'^[a-zA-Z]')) %>%
-#            anti_join(stop_words) %>%
             mutate(word=str_replace(word,'\'s$','')) %>% 
             group_by(word) %>% mutate(n=n()) %>% ungroup() %>% 
             mutate(next_word=lead(word,default='')) %>%
