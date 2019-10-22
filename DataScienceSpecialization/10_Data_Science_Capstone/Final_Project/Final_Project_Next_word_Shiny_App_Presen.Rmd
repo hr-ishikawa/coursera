@@ -42,7 +42,7 @@ Input text into th input area
 
 ### Source Code  
 
-[Create ngeam data set](https://hr-ishikawa.github.io/coursera/DataScienceSpecialization/10_Data_Science_Capstone/Final_Project/Text_Mining_final_project_Create_ngram.html)
+[Create ngeam data set](https://hr-ishikawa.github.io/coursera/DataScienceSpecialization/10_Data_Science_Capstone/Final_Project/Final_Project_Create_ngram.html)
 
 [Shiny_App.md](https://github.com/hr-ishikawa/coursera/blob/master/DataScienceSpecialization/10_Data_Science_Capstone/Final_Project/Shiny_App.md)
 
