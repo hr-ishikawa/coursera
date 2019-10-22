@@ -1,36 +1,63 @@
 library(shiny)
-library(ggplot2)
-library(stringr)
-library(tibble)
 library(dplyr)
+library(readr)
+library(stringr)
+library(tidytext)
 
 # Define server logic required to draw a histogram
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
 
-    output$distPlot <- renderPlot({
+    parse_in_text <- function(lines){ 
+        # Convert lines to Dataframe with Eond of Sentense Mark 
+        tibble(line=lines) %>%        # [1] 4,269,678
+            unnest_tokens(word,line) %>%
+            filter(str_detect(word,'^[a-zA-Z]')) %>%
+#            anti_join(stop_words) %>%
+            mutate(word=str_replace(word,'\'s$','')) %>% 
+            group_by(word) %>% mutate(n=n()) %>% ungroup() %>% 
+            mutate(next_word=lead(word,default='')) %>%
+            select(word)
+    }
+    
+    next_word <-function(ngram,in_text){
+        in_words <- parse_in_text(in_text) %>% pull(word)
+        if(length(in_words)<1){return('[[Not Predicted]]')}
+        nr <- length(in_words)
+        in_W3 <- if(nr>=3){in_words[nr-2]}else{''}
+        in_W2 <- if(nr>=2){in_words[nr-1]}else{''}
+        in_W1 <- in_words[nr]
+        next_word3 <- ngram %>% filter(W1==in_W1,W2==in_W2,W3==in_W3) %>% pull(next_word)
+        next_word2 <- ngram %>% filter(W1==in_W1,W2==in_W2,W3==''   ) %>% pull(next_word)
+        next_word1 <- ngram %>% filter(W1==in_W1,W2==''   ,W3==''   ) %>% pull(next_word)
+        if(length(next_word3)>0){return(next_word3)}
+        if(length(next_word2)>0){return(next_word2)}
+        if(length(next_word1)>0){return(next_word1)}
+        return('[[Not Predicted]]')
+    }
+    
+    # load ngrem
+    df <- reactive({ read_tsv(str_c('ngram.tsv'),na=c('NA'),col_names=T,col_types='cccc') })
 
-        colors <-tibble( col =c('Red',  'Orange',   'Green',    'Blue',     'Purple'   ),
-                         col1=c('pink', 'orange',   'limegreen','lightblue','plum'     ),
-                         col2=c('red',  'orangered','darkgreen','blue',     'violetred') )
-
-                # generate bins based on input$bins from ui.R
-        mu <- input$mu
-        sd <- input$sd
-        
-        x       <- seq(-10, 10, length=100)
-        density <- dnorm(x, mu, sd)
-
-        col1 <- colors %>% filter(col==input$col) %>% nth(2)
-        col2 <- colors %>% filter(col==input$col) %>% nth(3)
-        
-        ggplot()+ggtitle(str_c('Normal Distribution; mu=',mu,', sd=',sd))+
-            geom_ribbon(aes(x=x, ymin=0, ymax=density), fill=col1)+
-            geom_line(  aes(x=x, y=density),            color=col2, size=2)+
-            geom_text(  aes(x=mu+(last(x)-mu)/10, y=dnorm(mu,mu,sd)/10), 
-                        label=str_c('mu=',mu), color=col2, size=5)+
-            geom_vline(xintercept=mu, color=col2,    size=1)+
-            geom_hline(yintercept=0,  color='black', size=1)
-        
+    observeEvent(input$clear, {
+        ## Clear Text
+        updateTextInput(session, 'text',value='')
     })
 
+    output$word <- renderText({
+        ngram <- df()
+        # get input test
+        in_text <- input$text
+
+        if(str_length(in_text)<1){
+            out_html <- '"" ->> '
+        }else{
+            out_html <- str_c('<font color="blue">',in_text,                 '</font>" ->> ',
+                              '<font color="red" >',next_word(ngram,in_text),'</font>'       )
+        }
+        # Return
+        str_c('<div style="border:2px solid gray;"><div style="margin-left:5px;"><h4><b>"',
+              out_html,'
+              </b></h4></div></div>',sep='')
+    })
+    
 })

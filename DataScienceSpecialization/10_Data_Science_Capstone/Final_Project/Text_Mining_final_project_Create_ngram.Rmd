@@ -1,0 +1,392 @@
+---
+title: "Final Project"
+author: "Hiroo Ishikawa"
+date: "2019/10/15"
+output:
+  html_document:
+    toc: TRUE
+    toc_depth: 2
+    toc_float: FALSE
+    number_sections: TRUE
+    fig_width:  7
+    fig_height: 4
+    fig_caption: FALSE
+    dev: "png"
+    keep_md: FALSE
+    self_contained: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = 'C:/Users/ishi/Documents/RWK/coursera/')
+knitr::opts_chunk$set(echo=TRUE)
+knitr::opts_chunk$set(message=FALSE)
+knitr::opts_chunk$set(warning=FALSE)
+setwd( "C:/Users/ishi/Documents/RWK/coursera")
+```
+
+# Preparation: Create the ngram dataset for Next Word
+
+## Strategy
+
+Shrink the Data size for responsiveness (loading Data and query by user input)  
+
+Procesedure  
+
+1. Indicate End of Sentence - The last word don't have following word.  
+2. Remove the word start without alphabets - Other than alphabets are have no sense.  
+3. Aggregate the character code to ASCII (not complete) - some characters are utf8  
+4. Remove words that appear less frequency - threshold is less equal twice  
+5. n-gram top N pattern - Leave only the top and throw away others, to model to make the model smaller, and too Many candidates are ineffective.  
+6. remove n-gram data thet appear only once.  
+
+```{r message=F}
+library(tidyverse)
+library(tidytext)
+library(scales)
+options(digits=4)
+options(width=90)
+options(scipen=6)
+dir   <- 'final/en_US/'
+E_O_S <- 'ze_o_sz' # end of sentence
+```
+
+## Read files
+
+```{r}
+all <- c(read_lines(str_c(dir,'en_US.blogs.txt'  ),locale=locale(encoding='utf8'),skip=0),
+         read_lines(str_c(dir,'en_US.news.txt'   ),locale=locale(encoding='utf8'),skip=0),
+         read_lines(str_c(dir,'en_US.twitter.txt'),locale=locale(encoding='utf8'),skip=0),
+         'To be or not to be, that is the question.',
+         'The quick brown fox jumps over the lazy dog',
+         'The quick brown fox jumped over the lazy dogs'
+        )
+cat('## length(all)=',comma(length(all)),'\n',sep='') ## length(all)=4,269,680
+all %>% first()
+all %>% last()
+```
+
+## Tokenize
+
+Using Package: tidytext
+
+```{r}
+n_drop <- 2        # Number of frequent words to drop 
+rawToUtf <- function(r){str_conv(as.raw(r),encoding='utf8')}
+
+#------------------------------------
+parse_in <- function(lines){ 
+    # Convert lines to Dataframe with Eond of Sentense Mark 
+    tibble(line=str_c(lines,' ',E_O_S)) %>%
+    # Tokenize
+    unnest_tokens(word,line) %>%                   # Tokenize
+    # Remove the words start without alphabet
+    filter(str_detect(word,'^[a-zA-Z]')) %>%
+    # Replace unicode to ascii
+    mutate(word=str_replace_all(word,rawToUtf(c('0xe2','0x80','0x8e')),''  ),
+           word=str_replace_all(word,rawToUtf(c('0xef','0xbb','0xbf')),''  ),
+           word=str_replace_all(word,rawToUtf(c('0xe2','0x80','0x98')),'\''),
+           word=str_replace_all(word,rawToUtf(c('0xe2','0x80','0x99')),'\''),
+           word=str_replace_all(word,rawToUtf(c('0xc2','0xad')),       ''  ), # SOFT HYPHEN
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa0')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa1')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa2')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa3')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa4')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa5')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa6')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa7')),       'c' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa8')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xa9')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xaa')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xab')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xac')),       'i' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xad')),       'i' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xae')),       'i' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xaf')),       'i' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xb1')),       'n' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xb2')),       'o' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xb3')),       'o' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xb4')),       'o' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xb6')),       'o' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xb8')),       'o' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xb9')),       'u' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xba')),       'u' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xbb')),       'u' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xbc')),       'u' ),
+           word=str_replace_all(word,rawToUtf(c('0xc3','0xbd')),       'y' ),
+           word=str_replace_all(word,rawToUtf(c('0xc4','0x81')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc4','0x83')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xc4','0x87')),       'c' ),
+           word=str_replace_all(word,rawToUtf(c('0xc4','0x93')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xc4','0xab')),       'i' ),
+           word=str_replace_all(word,rawToUtf(c('0xc5','0xa5')),       't' ),
+           word=str_replace_all(word,rawToUtf(c('0xd0','0xb0')),       'a' ),
+           word=str_replace_all(word,rawToUtf(c('0xd0','0xb5')),       'e' ),
+           word=str_replace_all(word,rawToUtf(c('0xd0','0xbe')),       'o' ),
+           word=str_replace_all(word,rawToUtf(c('0xd1','0x81')),       'c' ),
+           word=str_replace_all(word,rawToUtf(c('0xd1','0x83')),       'y' ),
+           word=str_replace_all(word,rawToUtf(c('0xd1','0x95')),       's' ),
+           word=str_replace_all(word,rawToUtf(c('0xd1','0x96')),       'i' ), 
+           word=str_replace_all(word,rawToUtf(c('0xe1','0xb9','0x87')),'n' ),
+           word=str_replace_all(word,rawToUtf(c('0xe1','0xb9','0x9b')),'r' ),
+           word=str_replace_all(word,rawToUtf(c('0xe1','0xb9','0xa3')),'s' ),
+           word=str_replace_all(word,rawToUtf(c('0xe1','0xb9','0xad')),'t' ),
+           word=str_replace_all(word,rawToUtf(c('0xcc','0xb6')),       '_' )) %>%
+    mutate(word=str_replace(word,'\'s$','')) %>% 
+    # Remove the words that appear only once 
+    group_by(word) %>% mutate(n=n()) %>% ungroup() %>% 
+    mutate(word=if_else(n>n_drop,word,E_O_S)) %>%       # [1] 104,746,113
+    mutate(next_word=lead(word)) %>%
+    filter((word!=E_O_S)&(next_word!=E_O_S)) %>%
+    select(word)
+}
+
+#----------------------------------
+# Tokennize
+
+system.time( #  5897        129       6031  
+words <- parse_in(all)
+)
+cat('## nrow=',comma(nrow(words)),'\n',sep='')## nrow=95,403,497
+words %>% head(10)
+write_tsv(words,str_c(dir,'words.tsv'))
+
+rm(all)
+gc()
+```
+
+```{r include=FALSE}
+## Check remained unicode characters 
+not_ascii <- function(s){str_length(s)!=(charToRaw(s)%>%length())}
+CTR  <- function(str){str_c(charToRaw(str),collapse='-')}
+CTRN <- function(str){str_split(str,'')[[1]]%>%map_chr(CTR)}
+
+xxz <- words %>%
+       group_by(word) %>% summarise(n=n()) %>% 
+       mutate(not_ascii=map_lgl(word,not_ascii)) %>% 
+       filter(not_ascii==TRUE) %>% arrange(desc(n))
+xxz %>% head(10)
+xxx <- xxz %>% pull(word) # %>% sort()
+xxx %>% length() #321
+x <- xxx[1];x;CTR(x);CTRN(x)
+x <- xxx[2];x;CTR(x);CTRN(x)
+x <- xxx[3];x;CTR(x);CTRN(x)
+```
+
+
+## Create uni/bi/trigram
+
+```{r}
+#----------------------------------
+# Create n-gram
+#
+#words <- read_tsv(str_c(dir,'words.tsv'),na=c('NA'),col_types='c')
+cat('## nrow=',comma(nrow(words)),'\n',sep='')## nrow=95,403,497
+n_words <- table(words$word)
+l_words <- str_length(words$word)
+c(summary(as.integer(n_words)),quantile(n_words,c(0.90,0.95)) )%>% round(1)
+#   Min. 1st Qu.  Median   Mean  3rd Qu.       Max.    90%     95% 
+#     1.0    4.0    8.0    493.3    33.0 4735823.0   193.0   600.0
+c(summary(           l_words ),quantile(l_words,c(0.90,0.95))) %>% round(1)
+#   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     90%     95% 
+#    1.0     3.0     4.0     4.4     6.0    42.0     8.0     9.0 
+
+# unigram ----------------------------------
+system.time(  # 110.96       5.92     116.91
+unigram <- 
+    words %>%
+    rename(next_word=word ) %>%
+    mutate(W1       =lag(next_word,default=E_O_S)) %>%
+    filter(!str_detect(next_word,E_O_S) &
+           !str_detect(W1,       E_O_S)  ) %>%
+    group_by(W1,next_word) %>% summarize(n=n()) %>% ungroup() %>%
+    arrange(W1,desc(n)) %>% distinct(W1, .keep_all=T) %>% 
+    select(W1,next_word,n)
+)
+cat('## nrow(unigram)=',comma(nrow(unigram)),'\n',sep='') ## nrow(unigram)=193,379
+cat('## object.size(unigram)=',comma(as.integer(object.size(unigram))/1e6),' MB \n',sep='')
+## object.size(unigram)=17 MB
+unigram %>% head(10)
+
+gc()
+
+# bigram ----------------------------------
+system.time(  #  363.40      12.79     376.32  
+bigram <- 
+    words %>%
+    rename(next_word=word ) %>%
+    mutate(W1       =lag(next_word,  default=E_O_S),
+           W2       =lag(next_word,2,default=E_O_S) ) %>%
+    filter(!str_detect(next_word,E_O_S) &
+           !str_detect(W1,       E_O_S) & 
+           !str_detect(W2,       E_O_S)  ) %>%
+    group_by(next_word,W1,W2) %>% summarize(n=n()) %>% ungroup() %>% 
+    arrange(W1,W2,desc(n),next_word) %>% distinct(W1,W2, .keep_all=T) %>% 
+    select(W2,W1,next_word,n)
+)
+cat('## nrow(bigram)=',comma(nrow(bigram)),'\n',sep='') ## nrow(bigram)=13,195,231
+cat('## object.size(bigram)=',comma(as.integer(object.size(bigram))/1e6),' MB \n',sep='')
+## object.size(bigram)=401 MB 
+bigram %>% head(10)
+
+gc()
+
+# trigram ----------------------------------
+system.time(  #   1040.5      209.5     1632.6
+trigram <- 
+    words %>%
+    rename(next_word=word ) %>%
+    mutate(W1       =lag(next_word,  default=E_O_S),
+           W2       =lag(next_word,2,default=E_O_S),
+           W3       =lag(next_word,3,default=E_O_S) ) %>%
+    filter(!str_detect(next_word,E_O_S) &
+           !str_detect(W1,       E_O_S) & 
+           !str_detect(W2,       E_O_S) &
+           !str_detect(W3,       E_O_S)  ) %>% 
+    group_by(next_word,W1,W2,W3) %>% summarize(n=n()) %>% ungroup() %>% 
+    arrange(W1,W2,W3,desc(n),next_word) %>% distinct(W1,W2,W3, .keep_all=T) %>% 
+    select(W3,W2,W1,next_word,n)
+)
+cat('## nrow(trigram)=',comma(nrow(trigram)),'\n',sep='') ## nrow(trigram)=47,517,460
+cat('## object.size(trigram)=',comma(as.integer(object.size(trigram))/1e6),' MB \n',sep='')
+## object.size(trigram)=1,756 MB
+trigram %>% head(10)
+
+rm(words)
+gc()
+
+## Remove the case trigram if included bigram  ===============
+system.time(  #    153.49       0.71     154.43 
+trigram <- anti_join(trigram, bigram, by=c('W1','W2','next_word'))
+)
+cat('## nrow(trigram)=',comma(nrow(trigram)),'\n',sep='') ## nrow(trigram)=28,454,656
+cat('## object.size(trigram)=',comma(as.integer(object.size(trigram))/1e6),' MB \n',sep='')
+## object.size(trigram)=1,059 MB
+trigram %>% head(10)
+
+## Remove the case bigram if included uigram ===============
+system.time(  #   14.20       0.18      14.41
+bigram <- anti_join(bigram, unigram, by=c('W1','next_word'))
+)
+cat('## nrow(bigram)=',comma(nrow(bigram)),'\n',sep='') ## nrow(bigram)=10,950,083
+cat('## object.size(bigram)=',comma(as.integer(object.size(bigram))/1e6),' MB \n',sep='')
+## object.size(bigram)=338 MB  
+bigram %>% head(10)
+
+
+gc()
+```
+
+
+## Bind uni/bi/trigram into trigram format
+
+```{r}
+## Bind_rows with uni/bi/trigram ===============
+
+ngram <- 
+    bind_rows(unigram %>% mutate(W2='',W3=''), bigram %>% mutate(W3=''), trigram) %>% 
+    select(W3,W2,W1,next_word,n) %>%    arrange(W1,next_word,W2,W3) 
+cat('## nrow(ngram)=',comma(nrow(ngram)),'\n',sep='') ## nrow(ngram)=39,598,118
+cat('## object.size(ngram)=',comma(as.integer(object.size(ngram))/1e6),' MB \n',sep='')
+## object.size(ngram)=1,471 MB 
+ngram %>% head(10); ngram %>% tail(10)
+
+rm(words,unigram,bigram,trigram)
+gc()
+
+write_tsv(ngram,str_c(dir,'ngram00.tsv'))
+```
+
+## Ramove the case of appear only once
+
+```{r}
+ngram <- read_tsv(str_c(dir,'ngram00.tsv'),na=c('NA'),col_types='cccci')
+
+## Ramove the case of appear only once  ===============
+
+ngram %>% arrange(desc(n)) %>% head(10); ngram %>% arrange(desc(n)) %>% tail(10)
+
+ngram <- ngram %>% filter(n>1)
+cat('## nrow(ngram)=',comma(nrow(ngram)),'\n',sep='') ## nrow(ngramx)=2,433,840
+cat('## object.size(ngram)=',comma(as.integer(object.size(ngram))/1e6),' MB \n',sep='')
+## object.size(ngramx)=104 MB  
+
+ngram %>% arrange(desc(n)) %>% head(10); ngram %>% arrange(desc(n)) %>% tail(10)
+
+ngram <- ngram %>% select(-n) 
+
+gc()
+```
+
+## Save ngram Dataset
+
+```{r}
+write_tsv(ngram,str_c(dir,'ngram.tsv'))
+```
+
+## Test
+
+```{r}
+## Test ngram  ===============
+ngram <- read_tsv(str_c(dir,'ngram.tsv'),na=c('NA'),col_types='cccc')
+cat('## nrow(ngram)=',comma(nrow(ngram)),'\n',sep='') ## nrow(ngramx)=4,651,912
+cat('## object.size(ngram)=',comma(as.integer(object.size(ngram))/1e6),' MB \n',sep='')
+## object.size(ngramx)=167 MB  
+ngram %>% head(10); ngram %>% tail(10)
+
+parse_in_text <- function(lines){ 
+    # Convert lines to Dataframe with Eond of Sentense Mark 
+    tibble(line=lines) %>%
+    # Tokenize
+    unnest_tokens(word,line) %>%
+    # Remove the words start with number
+    filter(str_detect(word,'^[a-zA-Z]')) %>%
+    mutate(word=str_replace(word,'\'s$','')) %>% 
+    # Remove the words that appear only once 
+    group_by(word) %>% mutate(n=n()) %>% ungroup() %>% 
+    mutate(next_word=lead(word,default='')) %>%
+    filter((word!=E_O_S)&(next_word!=E_O_S)) %>%
+    pull(word)
+}
+
+query_ngram <- function(in_words){
+    nr <- length(in_words)
+    in_W3 <- if(nr>=3){in_words[nr-2]}else{''}
+    in_W2 <- if(nr>=2){in_words[nr-1]}else{''}
+    in_W1 <- in_words[nr]
+    #c(in_W3,in_W2,in_W1)
+
+    ngram %>% filter(W1==in_W1,W2==in_W2,W3==in_W3) %>% pull(next_word)
+    next_word3 <- ngram %>% filter(W3==in_W3,W2==in_W2,W1==in_W1) %>% pull(next_word)
+    next_word2 <- ngram %>% filter(W3==''   ,W2==in_W2,W1==in_W1) %>% pull(next_word)
+    next_word1 <- ngram %>% filter(W3==''   ,W2==''   ,W1==in_W1) %>% pull(next_word)
+    #c(next_word3,next_word2,next_word1)
+    if(length(next_word3)>0){return(next_word3)}
+    if(length(next_word2)>0){return(next_word2)}
+    if(length(next_word1)>0){return(next_word1)}
+    return('[[Not Predicted]]')
+}
+
+next_word <-function(in_text){
+    in_words <- parse_in_text(in_text)
+    if(length(in_words)<1){return('[[Not Predicted]]')}
+    query_ngram(in_words)
+}
+
+
+parse_in_text('The quick brown fox jumps over the lazy dog')
+# [1] "the"   "quick" "brown" "fox"   "jumps" "over"  "the"   "lazy"  "dog"  
+ngram %>% filter(W3==''     ,W2==''     ,W1=="quick") %>% pull(next_word) # [1] "to"
+ngram %>% filter(W3==''     ,W2=="quick",W1=="brown") %>% pull(next_word) # [1] "fox"
+ngram %>% filter(W3=="quick",W2=="brown",W1=='fox')   %>% pull(next_word) # [1] character(0)
+ngram %>% filter(W3==''     ,W2=="brown",W1=='fox')   %>% pull(next_word) # [1] "jumped"
+next_word('The') # [1] "first"
+next_word('The quick') # [1] "and"
+next_word('The quick brown') # [1] "fox"
+next_word('The quick brown fox') # [1] "jumped"
+next_word('The quick brown fox jumps') # [1] "over"
+next_word('The quick brown fox jumps over') # [1] "the"
+next_word('The quick brown fox jumps over the') # [1] "lazy"
+next_word('The quick brown fox jumps over the lazy') # [1] "dog"
+```
+
