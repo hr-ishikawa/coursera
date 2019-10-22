@@ -1,4 +1,4 @@
-## Create Shiny App URL -- ngram
+## Create Shiny App Predict Next Word form ngram
 
 ### Usage
 
