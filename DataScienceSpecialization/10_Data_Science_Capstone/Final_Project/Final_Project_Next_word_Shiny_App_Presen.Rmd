@@ -10,10 +10,14 @@ output: ioslides_presentation
 #### Predict Next word form inputed text
 
 
-## 2. The Algolysm
+## 2. The Model {.smaller}
+### n-gram model
 
-#### Predict Next word form inputed text
+an "n-gram" is a contiguous sequence of "n" word from a given sample of text.  
+We store the n-gram data and following word pairs. When the last "n" words of inputed text is match any n-gram, the next word provably the word paird.
 
+
+We create three n-gram models that "n" is  one, two and three. Apply tri(three)-gram to The text inputed preferentially, when no match, back-off to lower model.
 
 ## 3. The Prototype
 
@@ -21,14 +25,8 @@ output: ioslides_presentation
 
 #### Instruction
 
-The initial panel
 <div align="center">
-<img src="./RStudio_Presen__next_word/NW1.PNG"><br/>
-</div>
-
-Input text into th input area
-<div align="center">
-<img src="./RStudio_Presen__next_word/NW2.PNG"><br/>
+<img src="./RStudio_Presen_next_word/NW3.PNG"><br/>
 </div>
 
 ## 4. Sources
@@ -38,23 +36,21 @@ Input text into th input area
 - en_US.blogs.txt   -     899,288 Sentences
 - en_US.news.txt    -   1,010,242 Sentences
 - en_US.twitter.txt -   2,360,148 Sentences
--           extraced 95,403,497 words
+- extraced 95,403,497 words
 
 ### Source Code  
 
 [Create ngeam data set](https://hr-ishikawa.github.io/coursera/DataScienceSpecialization/10_Data_Science_Capstone/Final_Project/Final_Project_Create_ngram.html)
 
+
 [Shiny_App.md](https://github.com/hr-ishikawa/coursera/blob/master/DataScienceSpecialization/10_Data_Science_Capstone/Final_Project/Shiny_App.md)
 
-## 5. Appendix
+## 5. Improvement
 
-Thanks to:
+1. Reduse Data size: This implementation it takes time to load the data file. So, reduce physical data size without changing the logical model. For example, convert words to index or hash numbers
 
-![](./RStudio_Presen__next_word/R_logo.PNG)
-https://www.r-project.org/
+2. predict more likely word: 
 
-![](./RStudio_Presen__next_word/RStudio_logo.PNG)
-https://www.rstudio.com/
 
-***and the contributors!***
+
 
