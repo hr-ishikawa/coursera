@@ -21,7 +21,7 @@ We create three n-gram models that "n" is  one, two and three. Apply tri(three)-
 
 ## 3. The Prototype
 
-[Shiny_predict_next_word](tahttps://hr-ishikawa.shinyapps.io/Shiny_predict_next_word/)  <== *Click!*
+[Shiny_predict_next_word](https://hr-ishikawa.shinyapps.io/Shiny_predict_next_word/)  <== *Click!*
 
 #### Instruction
 
@@ -47,7 +47,7 @@ We create three n-gram models that "n" is  one, two and three. Apply tri(three)-
 
 ## 5. Improvement
 
-1. Reduse Data size: This implementation it takes time to load the data file. So, reduce physical data size without changing the logical model. For example, convert words to index or hash numbers
+1. Reduse Data size:  This implementation it takes time to load the data file. So, reduce physical data size without changing the logical model. For example, convert words to index or hash numbers.
 
 2. predict more likely word: 
 

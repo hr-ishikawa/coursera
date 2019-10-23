@@ -3127,13 +3127,13 @@ slide:not(.current) .plotly.html-widget{
 
 <h3>n-gram model</h3>
 
-<p>an &ldquo;n-gram&rdquo; is a contiguous sequence of &ldquo;n&rdquo; word from a given sample of text. We store the n-gram data and following word pairs. When the last &ldquo;n&rdquo; words of inputed text is match any n-gram, the next word provably the word paird.</p>
+<p>an &ldquo;n-gram&rdquo; is a contiguous sequence of &ldquo;n&rdquo; word from a given sample of text.<br/>We store the n-gram data and following word pairs. When the last &ldquo;n&rdquo; words of inputed text is match any n-gram, the next word provably the word paird.</p>
 
 <p>We create three n-gram models that &ldquo;n&rdquo; is one, two and three. Apply tri(three)-gram to The text inputed preferentially, when no match, back-off to lower model.</p>
 
 </article></slide><slide class=""><hgroup><h2>3. The Prototype</h2></hgroup><article  id="the-prototype">
 
-<p><a href='tahttps://hr-ishikawa.shinyapps.io/Shiny_predict_next_word/' title=''>Shiny_predict_next_word</a> &lt;== <em>Click!</em></p>
+<p><a href='https://hr-ishikawa.shinyapps.io/Shiny_predict_next_word/' title=''>Shiny_predict_next_word</a> &lt;== <em>Click!</em></p>
 
 <h4>Instruction</h4>
 
@@ -3160,7 +3160,7 @@ slide:not(.current) .plotly.html-widget{
 </article></slide><slide class=""><hgroup><h2>5. Improvement</h2></hgroup><article  id="improvement">
 
 <ol>
-<li><p>Reduse Data size: This implementation it takes time to load the data file. So, reduce physical data size without changing the logical model. For example, convert words to index or hash numbers</p></li>
+<li><p>Reduse Data size: This implementation it takes time to load the data file. So, reduce physical data size without changing the logical model. For example, convert words to index or hash numbers.</p></li>
 <li><p>predict more likely word:</p></li>
 </ol></article></slide>
 
