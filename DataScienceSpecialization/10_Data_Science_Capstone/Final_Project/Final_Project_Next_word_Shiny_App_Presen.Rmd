@@ -7,8 +7,9 @@ output: ioslides_presentation
 
 ## 1. Goal
 
-#### Predict Next word form inputed text
+#### Predict the next word form inputed text
 
+<br/>
 <br/>
 <br/>
 <div align="center">
