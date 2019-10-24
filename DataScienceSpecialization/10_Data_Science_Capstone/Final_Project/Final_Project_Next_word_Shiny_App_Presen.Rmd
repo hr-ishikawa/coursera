@@ -1,5 +1,5 @@
 ---
-title: "Final Project - Shiny App Presentation"
+title: "Final Project: The Next Word - Shiny App Presentation"
 author: "Ishikawa"
 date: "2019/10/20"
 output: ioslides_presentation
