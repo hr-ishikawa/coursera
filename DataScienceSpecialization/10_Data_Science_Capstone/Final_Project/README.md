@@ -43,12 +43,13 @@ The goal of this exercise is to create a product to highlight the prediction alg
 - リンクは、shinyapps.ioで実行されているテキスト入力ボックスを備えたShinyアプリにつながりますか？
 - アプリは、入力を受け入れることができるポイントまでロードしますか？
 - 入力ボックスにフレーズを入力すると、submitを押した後に単一の単語の予測が得られますか、またはモデルが回答を計算するのに適した遅延がありますか？
-- Twitterから引用した5つのフレーズまたは英語のニュース記事を最後の単語を除いて入れます。それはすべての人に予測を与えましたか？
+- Twitterから引用した5つのフレーズまたは英語のニュース記事を最後の単語を除いて入れます。それはすべての人に予測を与えましたか？  
+```
 The only outwardly religious adornment was a billboard-sized banner with an image of Our Lady of Charity, patron saint of Cuba, hanging on the side of the National Library.  
 The key to keeping your woman happy= attention, affection, treat her like a queen and sex her like a pornstar! 
 The quick brown
 The quick brown fox jumped over the lazy
-
+```
 ### Slide Deck
 
 - リンクは、Rパブの5スライドデッキにつながりますか？
