@@ -46,6 +46,8 @@ The goal of this exercise is to create a product to highlight the prediction alg
 - Twitterから引用した5つのフレーズまたは英語のニュース記事を最後の単語を除いて入れます。それはすべての人に予測を与えましたか？
 The only outwardly religious adornment was a billboard-sized banner with an image of Our Lady of Charity, patron saint of Cuba, hanging on the side of the National Library.  
 The key to keeping your woman happy= attention, affection, treat her like a queen and sex her like a pornstar! 
+The quick brown
+The quick brown fox jumped over the lazy
 
 ### Slide Deck
 
@@ -55,3 +57,40 @@ The key to keeping your woman happy= attention, affection, treat her like a quee
 - このアプリの使用経験をどのように説明しますか？
 - アプリは斬新なアプローチを提示しますか、および/または特によくできていますか？
 - あなた自身のデータサイエンススタートアップ企業のためにこの人を雇いますか？
+
+#==========
+
+#### Does the link lead to a Shiny app with a text input box that is running on shinyapps.io ?
+No, the link does not lead to a Shiny app with a text input box  
+Yes, the link leads to a Shiny app with a text input box  
+
+#### Does the app load to the point where it can accept input?
+No, the app did not load or was not available to accept inputs  
+Yes, the app could accept inputs.  
+
+#### When you type a phrase in the input box do you get a prediction of a single word after pressing submit and/or a suitable delay for the model to compute the answer?
+No, the app did not produce a prediction of a single word  
+Yes, the app did produce a prediction of a single word  
+
+####  Put five phrases drawn from Twitter or news articles in English leaving out the last word. Did it give a prediction for every one?
+No, the app did not appear to perform sensibly  
+Yes, the app produced predictions for some words    
+Yes, the app produced a prediction for each word  
+Yes, the app produced predictions for each word and predicted the correct word in at least one case  
+
+####  Does the link lead to a 5 slide deck on R Pubs?
+no, it does not lead to a 5 slide deck  
+yes, it does lead to a 5 slide deck  
+
+#### Does the slide deck contain a description of the algorithm used to make the prediction?
+no, it does not contain a description of the algorithm  
+yes, it contains a description of the algorithm  
+
+#### Does the slide deck describe the app, give instructions, and describe how it functions?
+no, it does not describe the app and its function  
+yes, it does describe the app and its function  
+
+#### How would you describe the experience of using this app?
+The app was functional and met the description of the project requirements  
+The app was well-designed, easy to use, and generally performed well.  
+The app was was very impressive: designed well, fast and responsive, surprisingly accurate, and a joy to use.  
