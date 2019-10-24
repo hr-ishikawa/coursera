@@ -45,8 +45,9 @@ The goal of this exercise is to create a product to highlight the prediction alg
 - 入力ボックスにフレーズを入力すると、submitを押した後に単一の単語の予測が得られますか、またはモデルが回答を計算するのに適した遅延がありますか？
 - Twitterから引用した5つのフレーズまたは英語のニュース記事を最後の単語を除いて入れます。それはすべての人に予測を与えましたか？  
 ```
+Existing treatments for the disease include interferons, such as Avonex, which tamp down the immune system; Copaxone (glatiramer acetate) and Tysabri (natalizumab), which tamp down the immune system by different mechanisms. All are given as injections. Gilenya (fingolimod), the newest approved medication and the first oral drug for MS, reduces the number of lymphocytes in the blood.
 The only outwardly religious adornment was a billboard-sized banner with an image of Our Lady of Charity, patron saint of Cuba, hanging on the side of the National Library.  
-The key to keeping your woman happy= attention, affection, treat her like a queen and sex her like a pornstar! 
+I get that different prism, in fact, sports narrative plays up the difference, even when the facts don't supportThe key to keeping your woman happy= attention, affection, treat her like a queen and sex her like a pornstar!
 The quick brown
 The quick brown fox jumped over the lazy
 ```
