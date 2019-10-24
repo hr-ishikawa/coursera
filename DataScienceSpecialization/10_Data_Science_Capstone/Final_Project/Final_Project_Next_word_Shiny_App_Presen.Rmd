@@ -61,4 +61,4 @@ We create three n-gram models that "n" is  one, two and three. Apply tri(three)-
 This implementation it takes time to load the data file. So, we can reduce physical data size without changing the logical model. For example, convert words to index or hash numbers.
 <br/>
 2. Predict more likely word
-We can consider to predict words with more likely. For example, word frequency, word position, and (more advanced) strength or closeness of meaning, and more.
+We can consider to predict words with more likely. For example, word frequency, word position, tense, plural form, substring and (more advanced) strength or closeness of meaning, and more.
