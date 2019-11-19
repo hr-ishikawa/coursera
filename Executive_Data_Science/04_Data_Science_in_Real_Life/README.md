@@ -1,5 +1,71 @@
-#### Course structure
+## Course structure
 https://docs.google.com/presentation/d/1-jkoseBpWyCS-Kepw_uJi3tV_EGZj0QEZ_mFRSqnFbw/edit#slide=id.g484b925ea_01
+### The perfect data science experience
+(versus real life)
+
+#### Attributes
+- Clearly defined hypotheses of interest, specified a priori
+- Experimental design available
+   - Randomization used across a treatment of interest
+   - Stratification on nuisance variables
+- Random sample from a population of interest
+- Data directly able to interrogate hypotheses
+- Dataset creation/merging goes smoothly
+- No missing data or dropout
+- Analysis is robust without need for advanced modeling
+- Conclusions are clear
+   - Parsimonious knowledge gained via the experiment
+- Decision is obvious given the data
+
+#### Attributes of data science in real life
+- Data is needed to inform hypotheses and interrogate them
+- Multiple comparisons are an issue
+- Experimental design options are limited. Or, data is observational
+   - Randomization is not available
+   - Data is retrospective
+- The population being studied isn’t the population of interest
+- The data don’t have the exact measurements that you need to evaluate the hypotheses
+- Dataset is problematic
+   - Merging is problematic with multiple matches, no matches
+   - Data entry errors
+- Missing data
+- Advanced modeling is required, similarly advanced computing needed to fit the model, issues with robustness and bugs
+- Conclusions are indeterminant
+- Decision is not substantially further informed by the data
+
+---
+### 完璧なデータサイエンスエクスペリエンス（実生活に対して）
+
+#### 属性
+- 明確に定義された興味のある仮説、アプリオリに指定
+- 実験デザインが利用可能
+   - 関心のある治療全体で使用されるランダム化
+   - 迷惑変数の層別化
+- 関心のある母集団からのランダムサンプル
+- 仮説を直接調査できるデータ
+- データセットの作成/マージがスムーズに進みます
+- 欠落データやドロップアウトはありません
+- 高度なモデリングを必要とせずに分析が堅牢
+- 結論は明確です
+   - 実験を通じて得られたPar約的な知​​識
+- データがあれば決定は明らか
+
+### 実生活におけるデータサイエンスの属性
+- 仮説を伝え、それらを調査するためにデータが必要です
+- 多重比較は問題です
+- 実験的な設計オプションは限られています。または、データは観測的です
+   - ランダム化は利用できません
+   - データは遡及的
+- 調査対象の人口は関心のある人口ではありません
+- データには、仮説を評価するために必要な正確な測定値がありません
+- データセットに問題がある
+   - 一致は複数の一致で問題があり、一致しない
+   - データ入力エラー
+- 欠落データ
+- 高度なモデリングが必要であり、モデルに適合するために同様に高度なコンピューティングが必要、堅牢性とバグの問題
+- 結論は不確定です
+- データによって決定が実質的にさらに通知されることはありません
+
 
 ### 1. The data pull is clean
 #### Lecture slides 
