@@ -18,8 +18,18 @@ Descriptive statistics includes exploratory data analysis, unsupervised learning
 Inference is the process of making conclusions about populations from samples. Inference includes most of the activities traditionally associated with statistics such as: estimation, confidence intervals, hypothesis tests and variability. Inference forces us to formally define targets of estimations or hypotheses. It forces us to think about the population that we're trying to generalize to from our sample.
 
 Prediction overlaps quite a bit with inference, but modern prediction tends to have a different mindset. Prediction is the process of trying to guess an outcome given a set of realizations of the outcome and some predictors. Machine learning, regression, deep learning, boosting, random forests and logistic regression are all prediction algorithms. If the target of prediction is binary or categorical, prediction is often called classification. In modern prediction, emphasis shifts from building small, parsimonious, interpretable models to focusing on prediction performance, often estimated via cross validation. Generalizability is often given not by a sampling model, as in traditional inference, but by challenging the algorithm on novel datasets. Prediction has transformed many fields include e-commerce, marketing and financial forecasting.
-
 Experimental design is the act of controlling your experimental process to optimize the chance of arriving at sound conclusions. The most notable example of experimental design is randomization. In randomization a treatment is randomized across experimental units to make treatment groups as comparable as possible. Clinical trials and A/B testing both employ randomization. In random sampling, one tries to randomly sample from a population of interest to get better generalizability of the results to the population. Many election polls try to get a random sample.
+
+---
+記述統計には、探索的データ分析、教師なし学習、クラスタリング、および基本的なデータの要約が含まれます。記述統計には多くの用途があり、最も顕著なのはデータセットに慣れるのに役立ちます。通常、記述統計は分析の開始点です。多くの場合、記述統計は、より正式な推論で後でテストする仮説に到達するのに役立ちます。
+
+推論は、サンプルから母集団について結論を出すプロセスです。推論には、推定、信頼区間、仮説検定、変動性などの統計に伝統的に関連付けられているアクティビティのほとんどが含まれます。推論により、推定または仮説のターゲットを正式に定義する必要があります。サンプルから一般化しようとしている母集団について考える必要があります。
+
+予測は推論とかなり重複しますが、現代の予測は異なる考え方を持つ傾向があります。予測は、結果といくつかの予測子の一連の実現を前提として、結果を推測しようとするプロセスです。機械学習、回帰、ディープラーニング、ブースティング、ランダムフォレスト、ロジスティック回帰はすべて予測アルゴリズムです。予測のターゲットがバイナリまたはカテゴリーの場合、予測はしばしば分類と呼ばれます。現代の予測では、小さく、節約的で解釈可能なモデルを構築することから、しばしばクロス検証によって推定される予測パフォーマンスに焦点を当てることに重点がシフトします。一般化可能性は、従来の推論のようにサンプリングモデルによってではなく、新しいデータセットのアルゴリズムに挑戦することによって与えられることがよくあります。予測は、eコマース、マーケティング、財務予測など、多くの分野を変えました。
+
+実験計画とは、適切な結論に達する可能性を最適化するために実験プロセスを制御する行為です。実験計画の最も注目すべき例は、ランダム化です。ランダム化では、治療グループを可能な限り同等にするために、実験ユニット全体で治療がランダム化されます。臨床試験とA / Bテストはどちらもランダム化を採用しています。ランダムサンプリングでは、対象の母集団からランダムにサンプリングして、母集団に対する結果のより一般化を取得しようとします。多くの選挙調査では、ランダムなサンプルを取得しようとしています。
+
+---
 
 ## Machine learning
 
@@ -38,8 +48,6 @@ It is worth contrasting modern machine learning and prediction with more traditi
 
 For this discussion, I would summarize (focusing on supervised learning) some characteristics of ML as:
 
-MLの特徴の要約
-
 - the emphasis on predictions;
 - evaluating results via prediction performance;
 - having concern for overfitting but not model complexity per se;
@@ -48,6 +56,19 @@ MLの特徴の要約
 - usually no superpopulation model specified;
 - concern over performance and robustness.
 ---
+機械学習は、現代の予測とクラスタリングの革命です。機械学習は、コンピューターサイエンス、統計、およびエンジニアリングを含む広大な分野になりました。一部のアルゴリズムは、人工知能に根ざしています（ニューラルネットワークやディープラーニングなど）。
+
+データサイエンティストの場合、機械学習の2つの主要なアクティビティを分解します。 （もちろん、このリストは網羅的ではありません。）これらは
+
+教師なし学習-データ内の観測されていない要因を明らかにしようとしています。判断基準となるゴールドスタンダードの結果がないため、「監視なし」と呼ばれます。階層的クラスタリング、主成分分析、因子分析、k-meansを含むアルゴリズムの例。
+教師あり学習-予測子のコレクションといくつかの観察された結果を使用して、観察されない場合に結果を予測するアルゴリズムを構築します。例には、ニューラルネットワーク、ランダムフォレスト、ブースティングおよびサポートベクターマシンが含まれます。
+gファクターの計算における教師なしクラスタリングの有名な初期の例を示します。これは本質的な知性の尺度であると仮定されました。初期の因子分析モデルを使用して、心理測定質問のスコアをクラスター化し、g因子を作成しました。ゴールドスタンダードの結果がないことに注意してください。アルゴリズムを訓練して予測するための固有の知能の真の尺度はありませんでした。
+
+教師あり学習については、初期の例である回帰の開発を示します。この中で、フランシス・ガルトンは両親から子供の身長を予測したかった。彼はその過程で線形回帰を開発しました。両親と一緒に既知の大人の身長を持つ複数の子供を持つことで、モデルを構築し、それを期待している親に適用することができます。
+
+現代の機械学習と予測を従来の統計と比較する価値があります。従来の統計は、非常に優れた予測を生成するモデルやクラスタリングの方法など、機械学習と大きく重複しています。ただし、モデリングと推論に関する従来の統計では、結果を母集団にまで広げるという問題がずっと重視されています。現代の機械学習は、教師付きおよび教師なしの問題に対するアルゴリズムのパフォーマンスだけでなく、モデルと推論への焦点からのパラダイムシフトからも、統計学においていくらか革命的でした。以下に、これらの違いのいくつかを特徴付けます。
+
+MLの特徴の要約
 - 予測の強調
 - 予測パフォーマンスによる結果の評価
 - モデルの複雑さ自体ではなく、過剰適合に対する懸念
@@ -137,6 +158,24 @@ Good ease of use and design are a discipline unto themselves. Since your data sc
 
 On the other hand, having well commented code and version control should be standard practice for data scientists. Well commented code is easy to return to for new employees or the original coder returning to the project after a long hiatus. Version control is similar good practice. With version control, data scientists will be able to return to any checked in version of the project. The comments are useful for documenting the evolution of the project as well. Tools such as git and github make version control easy and are in the standard toolkit of data scientists.
 
+---
+概して、これらのポイントは明らかです。ただし、この後者のポイントは、スペシャライゼーション全体を通して多くのことを議論するポイントです。再現可能なレポートには、データ分析を再現するための内部メカニズムがあります。この方法でレポートを作成する利点は数多くあります。データサイエンティストにプロセスの出力について考えさせる（最終的な出力にコードが埋め込まれているため）、コードのコメントを超えた非常に明確なドキュメント、レポート生成プロセスの自動化、そしてもちろん再現性。再現可能なレポートを作成するための主なツールは、kntirおよびipythonノートブックです。組織でこれらのツールまたは類似のツールを使用する文化を作成する必要があります。これらは再現性を大幅に向上させるためです。
+
+奇妙なことに、同じルールがプレゼンテーションにも適用されますが、再現可能なプレゼンテーションソフトウェアはあまり採用されていません。 Rには、slidifyとrStudioのプレゼンターがいます。これらのツールは、knitrおよびipythonノートブックがレポート生成を自動化するのと同じ方法でプレゼンテーションを自動化します。
+
+インタラクティブなWebページとアプリは、ディスカッションで組み合わせるのに十分似ています。繰り返しになりますが、要件はアプリケーションによって大きく異なるため、良い出力のいくつかの特徴についてのみ説明します。これらには以下が含まれます。
+
+- 使いやすさ/デザインの良さ
+- 優れたドキュメント
+- コードがコメントされました
+- コードバージョン管理
+
+使いやすさとデザインの良さは、それ自体が規律です。データサイエンティストもソフトウェアエンジニアやデザイナーではない可能性が高いため、おそらく彼らの設計は最適ではありません。ただし、最新のツールを使用すると、データサイエンティストはアプリやインタラクティブなWebページのプロトタイプを迅速かつ比較的簡単に作成できます。データサイエンティストは、使用と設計を容易にするために注意を払う必要があります。同じ注意事項が設計にも当てはまりますが、適切な文書化は主に労力です。
+
+一方、コードとバージョン管理を十分にコメントすることは、データサイエンティストの標準的なプラクティスです。よくコメントされたコードは、新しい従業員や元のコーダーが長い休止期間を経てプロジェクトに戻った場合に簡単に戻ることができます。バージョン管理も同様の良い習慣です。バージョン管理により、データサイエンティストはプロジェクトのチェックインバージョンに戻ることができます。コメントは、プロジェクトの進化を文書化するのにも役立ちます。 gitやgithubなどのツールは、バージョン管理を容易にし、データサイエンティストの標準ツールキットに含まれています。
+
+---
+
 ## The four secrets of a successful data science experiment
 
 Defining success is a crucial part of managing a data science experiment. Of course, success is often context specific. However, some aspects of success are general enough to merit discussion. My list of hallmarks of success includes:
@@ -145,14 +184,18 @@ Defining success is a crucial part of managing a data science experiment. Of cou
 2. Decisions or policies are made based on the outcome of the experiment.
 3. A report, presentation or app with impact is created.
 4. It is learned that the data can't answer the question being asked of it.
+
+Some more negative outcomes include: decisions being made that disregard clear evidence from the data, equivocal results that do not shed light in one direction or another, uncertainty prevents new knowledge from being created.
+
 ---
+成功を定義することは、データサイエンス実験を管理する上で重要な部分です。 もちろん、成功は多くの場合コンテキスト固有です。 ただし、成功のいくつかの側面は、議論に値するほど一般的です。 私の成功の特徴のリストは次のとおりです。
+
 1. 新しい知識が作成されます。
 2. 決定またはポリシーは、実験の結果に基づいて行われます。
 3. 影響のあるレポート、プレゼンテーション、アプリが作成されます。
 4. データは、求められている質問に答えることができないことがわかります。
----
 
-Some more negative outcomes include: decisions being made that disregard clear evidence from the data, equivocal results that do not shed light in one direction or another, uncertainty prevents new knowledge from being created.
+より否定的な結果には、データからの明確な証拠を無視する決定、ある方向または別の方向に光を当てない曖昧な結果、不確実性が新しい知識の作成を妨げることが含まれます。
 
 
 
