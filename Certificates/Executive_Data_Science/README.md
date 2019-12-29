@@ -1,3 +1,4 @@
+```
 Executive Data Science Specialization
 Issuing Organization: Coursera
 Issue Date: December 2019
@@ -33,3 +34,4 @@ Executive Data Science Specialization 1/4: A Crash Course in Data Science
 発行日：九月 2019
 資格情報 ID：ULHZBSL5HAST
 資格情報 URL：https://www.coursera.org/account/accomplishments/verify/ULHZBSL5HAST
+```
